@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Danych | System Zastępstw</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #f4f5f2;
+            --bg-surface: #ffffff;
+            --text-main: #1c211e;
+            --text-muted: #5c6661;
+            --border-subtle: #e2e5df;
+            --accent: #90b918;
+            --accent-hover: #7ea315;
+        }
+
+        body {
+            font-family: 'Schibsted Grotesk', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            background-image: radial-gradient(var(--border-subtle) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-reveal { opacity: 0; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        
+        .dropzone {
+            transition: all 0.2s ease-in-out;
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23e2e5df' stroke-width='4' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+            border-radius: 16px;
+        }
+        
+        .dropzone:hover, .dropzone:focus-within {
+            background-color: rgba(144, 185, 24, 0.03);
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%2390b918' stroke-width='4' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+        }
+    </style>
+</head>
+<body class="min-h-screen pt-24 pb-12 px-4 sm:px-8 flex flex-col items-center">
+
+    <!-- Shared Header -->
+    <header class="fixed top-0 left-0 w-full px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-[#e2e5df] z-50 animate-reveal">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-sm bg-[#90b918] flex items-center justify-center text-white font-bold text-lg">Z</div>
+            <span class="font-semibold tracking-tight text-[#1c211e] hidden sm:block">System Zastępstw</span>
+        </div>
+        <a href="/" class="flex items-center gap-2 text-sm font-medium text-[#5c6661] hover:text-[#1c211e] transition-colors bg-[#f4f5f2] px-4 py-2 rounded-full border border-[#e2e5df] hover:border-[#90b918]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Panel Główny
+        </a>
+    </header>
+
+    <main class="w-full max-w-3xl animate-reveal delay-1 mt-4">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold tracking-tight text-[#1c211e] mb-3">Import Danych Harmonogramu</h1>
+            <p class="text-[#5c6661]">Zaktualizuj bazę wczytując pliki wygenerowane z systemu zarządzania szkołą.</p>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-[#e2e5df] shadow-sm p-6 sm:p-10">
+            
+            <!-- Instructions Card -->
+            <div class="mb-8 bg-[#f4f5f2] p-5 rounded-2xl border border-[#e2e5df]">
+                <div class="flex items-center gap-2 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="text-[#5c6661]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <h3 class="font-bold text-[#1c211e]">Obsługiwane formaty:</h3>
+                </div>
+                <ul class="text-sm text-[#5c6661] space-y-2 ml-7 list-disc marker:text-[#90b918]">
+                    <li><strong class="text-[#1c211e] font-semibold">Zastępstwa:</strong> Wybierz pojedynczy plik HTML.</li>
+                    <li><strong class="text-[#1c211e] font-semibold">Plan Lekcji (XML):</strong> Eksport z programu (Plik -> Eksport -> XML).</li>
+                    <li><strong class="text-[#1c211e] font-semibold">Plan Lekcji (HTML):</strong> Archiwum <strong class="text-[#1c211e] bg-white px-1.5 py-0.5 rounded border border-[#e2e5df]">.ZIP</strong> zawierające folder planu (np. pliki <code>o1.html</code>).</li>
+                </ul>
+            </div>
+
+            <!-- Upload Form -->
+            <form id="uploadForm" class="space-y-6">
+                <div class="w-full">
+                    <label for="dropzone-file" class="dropzone flex flex-col items-center justify-center w-full h-64 cursor-pointer group">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
+                            <div class="w-16 h-16 mb-4 rounded-2xl bg-[#f4f5f2] border border-[#e2e5df] flex items-center justify-center group-hover:bg-[#90b918] group-hover:text-white group-hover:border-[#90b918] transition-colors text-[#5c6661]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            </div>
+                            <p class="mb-1 text-[#1c211e] text-lg font-semibold">Przeciągnij plik lub kliknij, aby przeglądać</p>
+                            <p class="text-sm text-[#5c6661]">Akceptowane pliki: HTML, XML, ZIP</p>
+                        </div>
+                        <input id="dropzone-file" type="file" class="hidden" accept=".html,.htm,.xml,.pla,.zip" required />
+                    </label>
+                </div>
+                
+                <!-- File Name Display -->
+                <div id="file-name" class="hidden text-center text-sm font-medium px-4 py-3 bg-[#f4f5f2] text-[#1c211e] rounded-xl border border-[#e2e5df]"></div>
+
+                <button type="submit" class="w-full bg-[#90b918] hover:bg-[#7ea315] text-white font-bold text-lg py-4 px-6 rounded-xl transition duration-200 ease-in-out shadow-[0_4px_14px_0_rgba(144,185,24,0.39)] hover:shadow-[0_6px_20px_rgba(144,185,24,0.23)] hover:-translate-y-0.5 outline-none focus:ring-4 focus:ring-[#90b918]/30">
+                    Rozpocznij Import
+                </button>
+            </form>
+
+            <!-- Result Alert -->
+            <div id="result" class="mt-6 hidden p-4 rounded-xl text-center font-medium border text-sm transition-all duration-300"></div>
+        </div>
+    </main>
+
+    <script>
+        const fileInput = document.getElementById('dropzone-file');
+        const fileNameDisplay = document.getElementById('file-name');
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fileNameDisplay.innerHTML = `<span class="text-[#5c6661]">Gotowy do wgrania:</span> <span class="text-[#90b918]">${e.target.files[0].name}</span>`;
+                fileNameDisplay.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resultDiv = document.getElementById('result');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert("Wybierz plik!");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            resultDiv.className = 'mt-6 p-4 rounded-xl text-center text-[#5c6661] bg-[#f4f5f2] border border-[#e2e5df] block';
+            resultDiv.innerHTML = '<span class="animate-pulse">Przetwarzanie danych, proszę czekać...</span>';
+
+            try {
+                const response = await fetch('/upload/', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'mt-6 p-4 rounded-xl text-center bg-[#f4f8e8] text-[#5e7a0f] border border-[#d6e8a0] block';
+                    resultDiv.textContent = data.message;
+                    fileNameDisplay.classList.add('hidden');
+                    fileInput.value = '';
+                } else {
+                    resultDiv.className = 'mt-6 p-4 rounded-xl text-center bg-[#fdf3f3] text-[#b83a3a] border border-[#fbd5d5] block';
+                    resultDiv.textContent = `Błąd operacji: ${data.detail || 'Nieznany błąd serwera'}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'mt-6 p-4 rounded-xl text-center bg-[#fdf3f3] text-[#b83a3a] border border-[#fbd5d5] block';
+                resultDiv.textContent = `Błąd połączenia: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

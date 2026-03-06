@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Lekcji | System Zastępstw</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #f4f5f2;
+            --bg-surface: #ffffff;
+            --text-main: #1c211e;
+            --text-muted: #5c6661;
+            --border-subtle: #e2e5df;
+            --accent: #90b918;
+            --accent-light: rgba(144, 185, 24, 0.1);
+        }
+
+        body {
+            font-family: 'Schibsted Grotesk', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            background-image: radial-gradient(var(--border-subtle) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-reveal { opacity: 0; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%235c6661'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .timetable-wrapper {
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+        
+        .timetable {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            min-width: 1000px;
+        }
+
+        .timetable th, .timetable td {
+            border-right: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .timetable th:first-child, .timetable td:first-child {
+            border-left: 1px solid var(--border-subtle);
+        }
+
+        .timetable tr:first-child th {
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .timetable tr:first-child th:first-child { border-top-left-radius: 16px; }
+        .timetable tr:first-child th:last-child { border-top-right-radius: 16px; }
+        .timetable tr:last-child td:first-child { border-bottom-left-radius: 16px; }
+        .timetable tr:last-child td:last-child { border-bottom-right-radius: 16px; }
+
+        .lesson-card {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .lesson-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px -2px rgba(144, 185, 24, 0.15);
+            border-color: var(--accent);
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar { height: 6px; }
+        .hide-scrollbar::-webkit-scrollbar-track { background: var(--bg-base); }
+        .hide-scrollbar::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+        .hide-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    </style>
+</head>
+<body class="min-h-screen pt-24 pb-12 px-4 sm:px-8" x-data="planApp()">
+    
+    <!-- Shared Header -->
+    <header class="fixed top-0 left-0 w-full px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-[#e2e5df] z-50 animate-reveal">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-sm bg-[#90b918] flex items-center justify-center text-white font-bold text-lg">Z</div>
+            <span class="font-semibold tracking-tight text-[#1c211e] hidden sm:block">System Zastępstw</span>
+        </div>
+        <a href="/" class="flex items-center gap-2 text-sm font-medium text-[#5c6661] hover:text-[#1c211e] transition-colors bg-[#f4f5f2] px-4 py-2 rounded-full border border-[#e2e5df] hover:border-[#90b918]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Panel Główny
+        </a>
+    </header>
+
+    <main class="max-w-[1400px] mx-auto">
+        <div class="mb-8 animate-reveal delay-1">
+            <h1 class="text-3xl font-bold tracking-tight text-[#1c211e] mb-2">Tygodniowy Plan Lekcji</h1>
+            <p class="text-[#5c6661]">Wybierz podmiot, aby załadować pełny harmonogram na cały tydzień.</p>
+        </div>
+
+        <!-- Control Bar (Usunięto @change, wszystko zarządza $watch w JS) -->
+        <div class="bg-white p-4 sm:p-6 rounded-2xl border border-[#e2e5df] shadow-sm mb-8 flex flex-col md:flex-row gap-4 animate-reveal delay-1 max-w-3xl">
+            <div class="flex-1">
+                <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2">Tryb widoku</label>
+                <select x-model="selectedType" class="custom-select w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer">
+                    <option value="class">Oddział (Klasa)</option>
+                    <option value="teacher">Nauczyciel</option>
+                </select>
+            </div>
+
+            <div class="flex-[2]">
+                <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2" x-text="selectedType === 'class' ? 'Wybierz Klasę' : 'Wybierz Nauczyciela'"></label>
+                <select x-model="selectedId" class="custom-select w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer disabled:opacity-50">
+                    <option value="">Wybierz z listy...</option>
+                    <template x-for="item in list" :key="item.id">
+                        <option :value="item.id" x-text="item.name"></option>
+                    </template>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Weekly Data Grid -->
+        <div class="animate-reveal delay-2 timetable-wrapper bg-white rounded-2xl overflow-hidden relative min-h-[400px]">
+            
+            <!-- Loading Overlay -->
+            <div x-show="loading" class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center transition-opacity duration-300">
+                <div class="w-12 h-12 border-4 border-[#e2e5df] border-t-[#90b918] rounded-full animate-spin mb-4 shadow-sm"></div>
+                <p class="text-[#1c211e] font-semibold tracking-tight bg-white px-4 py-1.5 rounded-full border border-[#e2e5df] shadow-sm">Pobieranie danych...</p>
+            </div>
+
+            <div class="overflow-x-auto hide-scrollbar">
+                <table class="timetable bg-white text-left">
+                    <thead>
+                        <tr>
+                            <th class="bg-[#f4f5f2] py-4 px-2 w-16 text-center text-xs font-bold text-[#5c6661] uppercase tracking-wider">Nr</th>
+                            <template x-for="day in ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek']">
+                                <th class="bg-[#f4f5f2] py-4 px-4 w-1/5 text-center text-xs font-bold text-[#5c6661] uppercase tracking-wider" x-text="day"></th>
+                            </template>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#e2e5df]">
+                        <!-- Stan początkowy -->
+                        <template x-if="!selectedId">
+                            <tr>
+                                <td colspan="6" class="py-24 text-center">
+                                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#f4f5f2] border border-[#e2e5df] text-[#5c6661] mb-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-[#1c211e]">Brak wybranego podmiotu</h3>
+                                    <p class="text-[#5c6661] mt-1">Skorzystaj z filtrów powyżej, aby załadować plan.</p>
+                                </td>
+                            </tr>
+                        </template>
+
+                        <!-- Pusty plan -->
+                        <template x-if="selectedId && lessonNumbers.length === 0 && !loading">
+                            <tr><td colspan="6" class="py-12 text-center text-[#5c6661]">Brak przypisanych lekcji w systemie dla wybranego podmiotu.</td></tr>
+                        </template>
+
+                        <!-- Właściwe rzędy planu -->
+                        <template x-for="ln in lessonNumbers" :key="ln">
+                            <tr>
+                                <!-- Numer Lekcji -->
+                                <td class="py-3 px-2 text-center bg-[#fcfdfa]">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#f4f5f2] border border-[#e2e5df] text-[#1c211e] font-bold shadow-sm" x-text="ln"></span>
+                                </td>
+                                
+                                <!-- Dni Tygodnia (1 = Pon, 5 = Pt) -->
+                                <template x-for="day in [1, 2, 3, 4, 5]" :key="day">
+                                    <td class="p-2 align-top bg-[#fcfdfa]">
+                                        
+                                        <!-- Jeśli brak lekcji (puste okienko) -->
+                                        <div x-show="!weekPlan[ln] || !weekPlan[ln][day]" class="h-full w-full min-h-[5rem] rounded-xl border border-dashed border-[#e2e5df] flex items-center justify-center opacity-40">
+                                            <span class="w-2 h-0.5 bg-[#e2e5df] rounded"></span>
+                                        </div>
+
+                                        <!-- Wyświetlanie lekcji (obsługuje grupy na tej samej godzinie) -->
+                                        <div x-show="weekPlan[ln] && weekPlan[ln][day]" class="flex flex-col gap-2 h-full">
+                                            <template x-for="(lesson, index) in (weekPlan[ln] && weekPlan[ln][day] ? weekPlan[ln][day] : [])" :key="lesson.id || index">
+                                                <div class="lesson-card bg-white p-3 rounded-xl border border-[#e2e5df] h-full flex flex-col justify-between cursor-default">
+                                                    
+                                                    <div class="mb-2">
+                                                        <div class="font-bold text-[#1c211e] leading-tight mb-1" x-text="lesson.subject"></div>
+                                                        <div class="text-xs font-medium text-[#5c6661]">
+                                                            <span x-show="selectedType === 'class'" x-text="lesson.teacher ? lesson.teacher.name : ''"></span>
+                                                            <span x-show="selectedType === 'teacher'" x-text="lesson.school_class ? lesson.school_class.name : ''" class="inline-block bg-[#f4f5f2] px-1.5 py-0.5 rounded border border-[#e2e5df]"></span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="flex justify-end mt-1">
+                                                        <span class="inline-flex items-center gap-1 bg-[#f4f8e8] border border-[#d6e8a0] text-[#5e7a0f] px-2 py-0.5 rounded-md text-xs font-bold shadow-sm" title="Sala">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                                            <span x-text="lesson.classroom ? lesson.classroom.name : '-'"></span>
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </td>
+                                </template>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function planApp() {
+            return {
+                selectedType: 'class',
+                selectedId: '',
+                list: [],
+                weekPlan: {},
+                lessonNumbers: [], 
+                loading: false,
+                _reqId: null,
+
+                init() {
+                    // Reagowanie na zmianę trybu (Nauczyciel/Klasa)
+                    this.$watch('selectedType', () => {
+                        this.selectedId = '';
+                        this.list = []; 
+                        this.weekPlan = {};
+                        this.lessonNumbers = [];
+                        this.fetchList();
+                    });
+
+                    // Obserwowanie zmiany ID z dropdowna zamiast podwójnego @change
+                    this.$watch('selectedId', (val) => {
+                        if (val) {
+                            this.fetchWeekPlan();
+                        } else {
+                            this.weekPlan = {};
+                            this.lessonNumbers = [];
+                        }
+                    });
+
+                    this.fetchList();
+                },
+
+                async fetchList() {
+                    let url = this.selectedType === 'class' ? '/plan/classes' : '/plan/teachers';
+                    try {
+                        let res = await fetch(url);
+                        this.list = await res.json();
+                        this.list.sort((a, b) => a.name.localeCompare(b.name));
+                    } catch(e) { console.error(e); }
+                },
+
+                async fetchWeekPlan() {
+                    if(!this.selectedId) return;
+                    
+                    // Zabezpieczenie przed Race Condition
+                    const reqToken = Symbol();
+                    this._reqId = reqToken;
+
+                    this.loading = true;
+                    this.weekPlan = {};
+                    this.lessonNumbers = [];
+
+                    try {
+                        const days = [1, 2, 3, 4, 5];
+                        const fetchPromises = days.map(day => {
+                            let url = this.selectedType === 'class' 
+                                ? `/plan/class/${this.selectedId}?day=${day}`
+                                : `/plan/teacher/${this.selectedId}?day=${day}`;
+                            return fetch(url).then(res => res.json()).then(data => ({ day, data }));
+                        });
+
+                        const results = await Promise.all(fetchPromises);
+                        
+                        // Przerywamy, jeśli użytkownik szybko przeklikał na inną opcję
+                        if (this._reqId !== reqToken) return;
+                        
+                        let planMatrix = {};
+                        let lessonSet = new Set(); // Set gwarantuje brak zduplikowanych "Godzin"
+
+                        results.forEach(({ day, data }) => {
+                            if (!Array.isArray(data)) return;
+                            
+                            data.forEach(lesson => {
+                                const ln = parseInt(lesson.lesson_number);
+                                if (isNaN(ln)) return;
+
+                                lessonSet.add(ln);
+                                
+                                if (!planMatrix[ln]) planMatrix[ln] = {};
+                                if (!planMatrix[ln][day]) planMatrix[ln][day] = [];
+                                
+                                // Odsiewanie błędów z API: Sprawdzenie czy dokładnie taka sama lekcja (nauczyciel + przedmiot) już istnieje w macierzy na tej godzinie
+                                const isDuplicate = planMatrix[ln][day].some(existing => 
+                                    existing.subject === lesson.subject && 
+                                    existing.teacher?.name === lesson.teacher?.name
+                                );
+
+                                if (!isDuplicate) {
+                                    planMatrix[ln][day].push(lesson);
+                                }
+                            });
+                        });
+
+                        // Budujemy listę lekcji bez luk (od minimum do maksimum)
+                        if (lessonSet.size > 0) {
+                            const min = Math.min(...lessonSet);
+                            const max = Math.max(...lessonSet);
+                            // Array.from utworzy ścisłą sekwencję np. [1,2,3,4,5]
+                            this.lessonNumbers = Array.from({length: max - min + 1}, (_, i) => min + i);
+                        } else {
+                            this.lessonNumbers = [];
+                        }
+                        
+                        this.weekPlan = planMatrix;
+                        
+                    } catch(e) { 
+                        console.error("Błąd podczas pobierania planu:", e); 
+                    } finally { 
+                        if (this._reqId === reqToken) {
+                            this.loading = false; 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

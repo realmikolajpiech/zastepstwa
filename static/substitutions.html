@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Zastępstw | System Zastępstw</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #f4f5f2;
+            --bg-surface: #ffffff;
+            --text-main: #1c211e;
+            --text-muted: #5c6661;
+            --border-subtle: #e2e5df;
+            --accent: #90b918;
+        }
+
+        body {
+            font-family: 'Schibsted Grotesk', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            background-image: radial-gradient(var(--border-subtle) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-reveal { opacity: 0; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.2s;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen pt-24 pb-12 px-4 sm:px-8" x-data="substitutionsApp()">
+
+    <!-- Shared Header -->
+    <header class="fixed top-0 left-0 w-full px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-[#e2e5df] z-50 animate-reveal">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-sm bg-[#90b918] flex items-center justify-center text-white font-bold text-lg">Z</div>
+            <span class="font-semibold tracking-tight text-[#1c211e] hidden sm:block">System Zastępstw</span>
+        </div>
+        <a href="/" class="flex items-center gap-2 text-sm font-medium text-[#5c6661] hover:text-[#1c211e] transition-colors bg-[#f4f5f2] px-4 py-2 rounded-full border border-[#e2e5df] hover:border-[#90b918]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Panel Główny
+        </a>
+    </header>
+
+    <main class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 animate-reveal delay-1">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight text-[#1c211e] mb-2">Rejestr Zastępstw</h1>
+                <p class="text-[#5c6661]">Przeglądaj modyfikacje planu dla wybranego dnia.</p>
+            </div>
+            
+            <!-- Date Picker Control -->
+            <div class="bg-white px-4 py-2.5 rounded-xl border border-[#e2e5df] shadow-sm flex items-center gap-3 w-full md:w-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="text-[#5c6661]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <input type="date" x-model="date" @change="fetchData" class="bg-transparent text-[#1c211e] font-medium outline-none border-none w-full md:w-auto cursor-pointer">
+            </div>
+        </div>
+        
+        <!-- Data Grid -->
+        <div class="bg-white rounded-2xl border border-[#e2e5df] shadow-sm overflow-hidden animate-reveal delay-2">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr class="bg-[#f4f5f2] border-b border-[#e2e5df]">
+                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider w-16">Nr</th>
+                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider">Nieobecny</th>
+                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider">Klasa</th>
+                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider">Przedmiot</th>
+                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider">Zastępca</th>
+                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider w-24">Sala</th>
+                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider">Uwagi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#e2e5df]">
+                        <template x-if="loading">
+                            <tr><td colspan="7" class="py-12 text-center text-[#5c6661]">Ładowanie bazy zastępstw...</td></tr>
+                        </template>
+                        <template x-if="!loading && substitutions.length === 0">
+                            <tr><td colspan="7" class="py-12 text-center text-[#5c6661]">Brak zarejestrowanych zastępstw na ten dzień.</td></tr>
+                        </template>
+                        <template x-for="sub in substitutions" :key="sub.id">
+                            <tr class="hover:bg-[#f9faf8] transition-colors">
+                                <td class="py-4 px-6 text-[#5c6661] font-medium" x-text="sub.lesson_number"></td>
+                                
+                                <!-- Distinct UI label for absent teacher -->
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-[#fdf3f3] text-[#b83a3a] text-sm font-semibold border border-[#fbd5d5]" x-text="sub.original_teacher ? sub.original_teacher.name : '-'"></span>
+                                </td>
+                                
+                                <td class="py-4 px-6 font-bold text-[#1c211e]" x-text="sub.school_class.name"></td>
+                                <td class="py-4 px-6 text-[#1c211e]" x-text="sub.subject"></td>
+                                
+                                <!-- Distinct UI label for substituting teacher -->
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-[#f4f8e8] text-[#5e7a0f] text-sm font-semibold border border-[#d6e8a0]" x-text="sub.substitute_teacher ? sub.substitute_teacher.name : '-'"></span>
+                                </td>
+                                
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center justify-center min-w-[2.5rem] px-2 py-0.5 rounded bg-[#f4f5f2] border border-[#e2e5df] text-sm font-semibold text-[#5c6661]" x-text="sub.classroom ? sub.classroom.name : '-'"></span>
+                                </td>
+                                
+                                <td class="py-4 px-6 text-sm text-[#5c6661] italic" x-text="sub.note || '-'"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function substitutionsApp() {
+            return {
+                date: new Date().toISOString().split('T')[0],
+                substitutions: [],
+                loading: false,
+                init() { this.fetchData(); },
+                async fetchData() {
+                    this.loading = true;
+                    try {
+                        const response = await fetch(`/substitutions/?date_from=${this.date}&date_to=${this.date}`);
+                        if (response.ok) { this.substitutions = await response.json(); } 
+                        else { console.error("Failed to fetch data"); }
+                    } catch (e) { console.error(e); } 
+                    finally { this.loading = false; }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
