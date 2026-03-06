@@ -55,7 +55,7 @@
             <div class="w-8 h-8 rounded-sm bg-[#90b918] flex items-center justify-center text-white font-bold text-lg">Z</div>
             <span class="font-semibold tracking-tight text-[#1c211e] hidden sm:block">System Zastępstw</span>
         </div>
-        <a href="/" class="flex items-center gap-2 text-sm font-medium text-[#5c6661] hover:text-[#1c211e] transition-colors bg-[#f4f5f2] px-4 py-2 rounded-full border border-[#e2e5df] hover:border-[#90b918]">
+        <a href="." class="flex items-center gap-2 text-sm font-medium text-[#5c6661] hover:text-[#1c211e] transition-colors bg-[#f4f5f2] px-4 py-2 rounded-full border border-[#e2e5df] hover:border-[#90b918]">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Panel Główny
         </a>
@@ -137,7 +137,7 @@
                 async fetchData() {
                     this.loading = true;
                     try {
-                        const response = await fetch(`/substitutions/?date_from=${this.date}&date_to=${this.date}`);
+                        const response = await fetch(`substitutions/?date_from=${this.date}&date_to=${this.date}`);
                         if (response.ok) { this.substitutions = await response.json(); } 
                         else { console.error("Failed to fetch data"); }
                     } catch (e) { console.error(e); } 

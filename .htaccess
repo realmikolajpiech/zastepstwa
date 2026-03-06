@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# If the request is for an existing file in static/, serve it directly
+RewriteCond %{REQUEST_URI} \.(html|css|js|png|jpg|gif|svg|ico)$
+RewriteCond %{DOCUMENT_ROOT}/static/%{REQUEST_URI} -f
+RewriteRule ^(.*)$ static/$1 [L]
+
+# Route everything else through index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
