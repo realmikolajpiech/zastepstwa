@@ -111,7 +111,7 @@
         </div>
 
         <!-- Control Bar (Usunięto @change, wszystko zarządza $watch w JS) -->
-        <div class="bg-white p-4 sm:p-6 rounded-2xl border border-[#e2e5df] shadow-sm mb-8 flex flex-col md:flex-row gap-4 animate-reveal delay-1 max-w-3xl">
+        <div class="bg-white p-4 sm:p-6 rounded-2xl border border-[#e2e5df] shadow-sm mb-8 flex flex-col md:flex-row gap-4 animate-reveal delay-1 max-w-3xl relative z-40 overflow-visible">
             <div class="flex-1">
                 <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2">Tryb widoku</label>
                 <select x-model="selectedType" class="custom-select w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer">
@@ -120,14 +120,72 @@
                 </select>
             </div>
 
-            <div class="flex-[2]">
+            <div class="flex-[2] relative z-50">
                 <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2" x-text="selectedType === 'class' ? 'Wybierz Klasę' : 'Wybierz Nauczyciela'"></label>
-                <select x-model="selectedId" class="custom-select w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer disabled:opacity-50">
-                    <option value="">Wybierz z listy...</option>
-                    <template x-for="item in list" :key="item.id">
-                        <option :value="item.id" x-text="item.name"></option>
+                <div class="relative z-50" x-data="{ dropdownOpen: false, searchTerm: '' }" @click.away="dropdownOpen = false" x-init="$watch('dropdownOpen', (open) => { if (open) { setTimeout(() => { $el.querySelector('input')?.focus(); }, 0); } })">
+                    <!-- Closed State - Button -->
+                    <template x-if="!dropdownOpen">
+                        <button 
+                            @click="dropdownOpen = true"
+                            class="w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer text-left flex items-center justify-between"
+                        >
+                            <span x-text="selectedId ? (list.find(item => item.id == selectedId) ? (selectedType === 'class' ? list.find(item => item.id == selectedId).name.split(' ')[0] : (list.find(item => item.id == selectedId).short_name || list.find(item => item.id == selectedId).name)) : 'Wybierz z listy...') : 'Wybierz z listy...'"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
                     </template>
-                </select>
+
+                    <!-- Open State - Search Input + Dropdown List -->
+                    <template x-if="dropdownOpen">
+                        <div class="relative">
+                            <!-- Search Input in the button area -->
+                            <input 
+                                x-model="searchTerm"
+                                type="text" 
+                                placeholder="Szukaj..."
+                                class="w-full bg-[#f4f5f2] border border-[#90b918] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:ring-1 focus:ring-[#90b918] text-sm"
+                                @click.stop
+                                @keydown.escape="dropdownOpen = false"
+                            />
+
+                            <!-- Options List Popup -->
+                            <div 
+                                class="absolute top-full left-0 right-0 mt-2 bg-white border border-[#e2e5df] rounded-xl shadow-2xl z-[9999] overflow-hidden max-h-64 overflow-y-auto"
+                            >
+                                <template x-for="item in list.filter(i => {
+                                    const displayText = selectedType === 'class' ? i.name.split(' ')[0] : (i.short_name || i.name);
+                                    return displayText.toLowerCase().includes(searchTerm.toLowerCase()) || i.name.toLowerCase().includes(searchTerm.toLowerCase());
+                                })" :key="item.id">
+                                    <button
+                                        @click="selectedId = item.id; dropdownOpen = false; searchTerm = ''"
+                                        class="w-full text-left px-4 py-3 hover:bg-[#f4f5f2] transition-colors border-b border-[#e2e5df] last:border-b-0 flex items-center justify-between"
+                                        :class="{ 'bg-[#f4f8e8]': selectedId == item.id }"
+                                        :title="item.name"
+                                    >
+                                        <div>
+                                            <div class="font-medium text-[#1c211e]" x-text="selectedType === 'class' ? item.name.split(' ')[0] : (item.short_name || item.name)"></div>
+                                            <div class="text-xs text-[#5c6661] truncate" x-text="item.name"></div>
+                                        </div>
+                                        <svg x-show="selectedId == item.id" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#90b918]">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </button>
+                                </template>
+
+                                <!-- No Results -->
+                                <template x-if="list.filter(i => {
+                                    const displayText = selectedType === 'class' ? i.name.split(' ')[0] : (i.short_name || i.name);
+                                    return displayText.toLowerCase().includes(searchTerm.toLowerCase()) || i.name.toLowerCase().includes(searchTerm.toLowerCase());
+                                }).length === 0">
+                                    <div class="px-4 py-6 text-center text-[#5c6661] text-sm">
+                                        Brak wyników
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
         </div>
         
@@ -257,7 +315,30 @@
                     let url = this.selectedType === 'class' ? 'plan/classes' : 'plan/teachers';
                     try {
                         let res = await fetch(url);
-                        this.list = await res.json();
+                        let allItems = await res.json();
+                        
+                        // Filter items to only show those with available lessons
+                        let itemsWithLessons = [];
+                        for (let item of allItems) {
+                            try {
+                                // Check if item has any lessons by checking day 1
+                                let checkUrl = this.selectedType === 'class' 
+                                    ? `/plan/class/${item.id}?day=1`
+                                    : `/plan/teacher/${item.id}?day=1`;
+                                let lessonRes = await fetch(checkUrl);
+                                let lessons = await lessonRes.json();
+                                
+                                // Include item only if it has lessons
+                                if (Array.isArray(lessons) && lessons.length > 0) {
+                                    itemsWithLessons.push(item);
+                                }
+                            } catch(e) {
+                                // If error checking, include the item anyway
+                                itemsWithLessons.push(item);
+                            }
+                        }
+                        
+                        this.list = itemsWithLessons;
                         this.list.sort((a, b) => a.name.localeCompare(b.name));
                     } catch(e) { console.error(e); }
                 },

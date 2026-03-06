@@ -65,8 +65,11 @@ function parseHtmlAndSave(string $contents): int {
                 $note = trim($cells[7]);
 
                 if ($classGroup) {
-                    $groupText = "[Grupa: {$classGroup}]";
-                    $note = $note ? "{$groupText} {$note}" : $groupText;
+                    if (preg_match('/\d+(?:\/\d+)?/', $classGroup, $m)) {
+                        $groupValue = $m[0];
+                        $groupText = "Grupa: {$groupValue}";
+                        $note = $note ? "{$note}. {$groupText}" : $groupText;
+                    }
                 }
 
                 if (!$className || !$subject) continue;
