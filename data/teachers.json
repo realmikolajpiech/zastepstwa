@@ -78,5 +78,420 @@
         "id": 16,
         "name": "Reczek-Chyl Danuta",
         "short_name": "Reczek-Chy"
+    },
+    {
+        "id": 17,
+        "name": "K.Serafin (SE)",
+        "short_name": "SE"
+    },
+    {
+        "id": 18,
+        "name": "B.Dunikowska (BD)",
+        "short_name": "BD"
+    },
+    {
+        "id": 19,
+        "name": "M.Jemioło (JE)",
+        "short_name": "JE"
+    },
+    {
+        "id": 20,
+        "name": "A.Witkowska (WI)",
+        "short_name": "WI"
+    },
+    {
+        "id": 21,
+        "name": "B.Migda (BM)",
+        "short_name": "BM"
+    },
+    {
+        "id": 22,
+        "name": "A.Skoczek (SK)",
+        "short_name": "SK"
+    },
+    {
+        "id": 23,
+        "name": "M.Przybylski (PR)",
+        "short_name": "PR"
+    },
+    {
+        "id": 24,
+        "name": "D.Oleksy (DO)",
+        "short_name": "DO"
+    },
+    {
+        "id": 25,
+        "name": "S.Olchawski (OL)",
+        "short_name": "OL"
+    },
+    {
+        "id": 26,
+        "name": "M.Madej (ME)",
+        "short_name": "ME"
+    },
+    {
+        "id": 27,
+        "name": "P.Ptak - Żołna (PŻ)",
+        "short_name": "PŻ"
+    },
+    {
+        "id": 28,
+        "name": "A.Dudek - Janicka (DU)",
+        "short_name": "DU"
+    },
+    {
+        "id": 29,
+        "name": "D.Szydłowski (DS)",
+        "short_name": "DS"
+    },
+    {
+        "id": 30,
+        "name": "M.Aleksiewicz-Drab (AL)",
+        "short_name": "AL"
+    },
+    {
+        "id": 31,
+        "name": "A.Wróbel (WR)",
+        "short_name": "WR"
+    },
+    {
+        "id": 32,
+        "name": "M.Natonek (NA)",
+        "short_name": "NA"
+    },
+    {
+        "id": 33,
+        "name": "O.Kowalski (KH)",
+        "short_name": "KH"
+    },
+    {
+        "id": 34,
+        "name": "E.Kozioł (EK)",
+        "short_name": "EK"
+    },
+    {
+        "id": 35,
+        "name": "M.Antosz (AN)",
+        "short_name": "AN"
+    },
+    {
+        "id": 36,
+        "name": "K.Osyba (OS)",
+        "short_name": "OS"
+    },
+    {
+        "id": 37,
+        "name": "M.Maćkowicz (MM)",
+        "short_name": "MM"
+    },
+    {
+        "id": 38,
+        "name": "M.Węgrzynowska (WM)",
+        "short_name": "WM"
+    },
+    {
+        "id": 39,
+        "name": "M.Byś (BY)",
+        "short_name": "BY"
+    },
+    {
+        "id": 40,
+        "name": "A.Stanisławczyk (SC)",
+        "short_name": "SC"
+    },
+    {
+        "id": 41,
+        "name": "I.Mostowy (IM)",
+        "short_name": "IM"
+    },
+    {
+        "id": 42,
+        "name": "I.Szurmańska (MU)",
+        "short_name": "MU"
+    },
+    {
+        "id": 43,
+        "name": "J.Pabijan (PN)",
+        "short_name": "PN"
+    },
+    {
+        "id": 44,
+        "name": "A.Kornaś (KN)",
+        "short_name": "KN"
+    },
+    {
+        "id": 45,
+        "name": "J.Jaworska (JW)",
+        "short_name": "JW"
+    },
+    {
+        "id": 46,
+        "name": "J.Surmacz (SJ)",
+        "short_name": "SJ"
+    },
+    {
+        "id": 47,
+        "name": "E.Sosin-Sidorko (ES)",
+        "short_name": "ES"
+    },
+    {
+        "id": 48,
+        "name": "M.Cholewa (CO)",
+        "short_name": "CO"
+    },
+    {
+        "id": 49,
+        "name": "M.Fitt-Bazuła (FI)",
+        "short_name": "FI"
+    },
+    {
+        "id": 50,
+        "name": "P.Janczak (JN)",
+        "short_name": "JN"
+    },
+    {
+        "id": 51,
+        "name": "Ł.Filip (FP)",
+        "short_name": "FP"
+    },
+    {
+        "id": 52,
+        "name": "K.Zamiatała (KZ)",
+        "short_name": "KZ"
+    },
+    {
+        "id": 53,
+        "name": "E.Świerczek (SW)",
+        "short_name": "SW"
+    },
+    {
+        "id": 54,
+        "name": "K.Obal (OB)",
+        "short_name": "OB"
+    },
+    {
+        "id": 55,
+        "name": "D.Sikora (SP)",
+        "short_name": "SP"
+    },
+    {
+        "id": 56,
+        "name": "Z.Janik (JA)",
+        "short_name": "JA"
+    },
+    {
+        "id": 57,
+        "name": "T.Kukla (TK)",
+        "short_name": "TK"
+    },
+    {
+        "id": 58,
+        "name": "J.Duch (DJ)",
+        "short_name": "DJ"
+    },
+    {
+        "id": 59,
+        "name": "T.Potocki (PT)",
+        "short_name": "PT"
+    },
+    {
+        "id": 60,
+        "name": "M.Klimczak (KL)",
+        "short_name": "KL"
+    },
+    {
+        "id": 61,
+        "name": "W.Łanocha (ŁA)",
+        "short_name": "ŁA"
+    },
+    {
+        "id": 62,
+        "name": "R.Mleczko (RM)",
+        "short_name": "RM"
+    },
+    {
+        "id": 63,
+        "name": "I.Słowiak (IS)",
+        "short_name": "IS"
+    },
+    {
+        "id": 64,
+        "name": "E.Hudyma (HU)",
+        "short_name": "HU"
+    },
+    {
+        "id": 65,
+        "name": "A.Tyrkiel (TY)",
+        "short_name": "TY"
+    },
+    {
+        "id": 66,
+        "name": "D.Tabiś (DT)",
+        "short_name": "DT"
+    },
+    {
+        "id": 67,
+        "name": "S.Nowicki (SN)",
+        "short_name": "SN"
+    },
+    {
+        "id": 68,
+        "name": "K.Leś (LE)",
+        "short_name": "LE"
+    },
+    {
+        "id": 69,
+        "name": "J.Kłusek (KŁ)",
+        "short_name": "KŁ"
+    },
+    {
+        "id": 70,
+        "name": "D.Reczek-Chyl (RE)",
+        "short_name": "RE"
+    },
+    {
+        "id": 71,
+        "name": "W.Batko (BA)",
+        "short_name": "BA"
+    },
+    {
+        "id": 72,
+        "name": "S.Świerad (SŚ)",
+        "short_name": "SŚ"
+    },
+    {
+        "id": 73,
+        "name": "G.Sidorko (SI)",
+        "short_name": "SI"
+    },
+    {
+        "id": 74,
+        "name": "B.Tlałka (BT)",
+        "short_name": "BT"
+    },
+    {
+        "id": 75,
+        "name": "E.Multan (EM)",
+        "short_name": "EM"
+    },
+    {
+        "id": 76,
+        "name": "S.Mleczko-Fikas (ML)",
+        "short_name": "ML"
+    },
+    {
+        "id": 77,
+        "name": "K.Daniec- Talarek (KD)",
+        "short_name": "KD"
+    },
+    {
+        "id": 78,
+        "name": "M.Musialski (MS)",
+        "short_name": "MS"
+    },
+    {
+        "id": 79,
+        "name": "M.Kucia (K1)",
+        "short_name": "K1"
+    },
+    {
+        "id": 80,
+        "name": "D.Chrzan (DC)",
+        "short_name": "DC"
+    },
+    {
+        "id": 81,
+        "name": "M.Kucia (K2)",
+        "short_name": "K2"
+    },
+    {
+        "id": 82,
+        "name": "M.Piskorz-Joniec (PM)",
+        "short_name": "PM"
+    },
+    {
+        "id": 83,
+        "name": "P.Płoskonka (PO)",
+        "short_name": "PO"
+    },
+    {
+        "id": 84,
+        "name": "J.Leszczyński (LS)",
+        "short_name": "LS"
+    },
+    {
+        "id": 85,
+        "name": "A.Kopytko (KA)",
+        "short_name": "KA"
+    },
+    {
+        "id": 86,
+        "name": "D.Wawryka (WA)",
+        "short_name": "WA"
+    },
+    {
+        "id": 87,
+        "name": "M.Włodarczyk (MW)",
+        "short_name": "MW"
+    },
+    {
+        "id": 88,
+        "name": "P.Piwowarczyk (PP)",
+        "short_name": "PP"
+    },
+    {
+        "id": 89,
+        "name": "B.Samek (SB)",
+        "short_name": "SB"
+    },
+    {
+        "id": 90,
+        "name": "L.Cyga (CL)",
+        "short_name": "CL"
+    },
+    {
+        "id": 91,
+        "name": "A.Polek (AP)",
+        "short_name": "AP"
+    },
+    {
+        "id": 92,
+        "name": "M.Lis (LI)",
+        "short_name": "LI"
+    },
+    {
+        "id": 93,
+        "name": "T.Habel (TH)",
+        "short_name": "TH"
+    },
+    {
+        "id": 94,
+        "name": "M.Lechowicz-Liro (LC)",
+        "short_name": "LC"
+    },
+    {
+        "id": 95,
+        "name": "S.Ropek (RO)",
+        "short_name": "RO"
+    },
+    {
+        "id": 96,
+        "name": "M.Jadczak (MJ)",
+        "short_name": "MJ"
+    },
+    {
+        "id": 97,
+        "name": "E.Wojnowicz (WO)",
+        "short_name": "WO"
+    },
+    {
+        "id": 98,
+        "name": "M.Bielawska-Wołek (BW)",
+        "short_name": "BW"
+    },
+    {
+        "id": 99,
+        "name": "M.Dzień (MA)",
+        "short_name": "MA"
     }
 ]

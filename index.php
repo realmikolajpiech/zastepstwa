@@ -78,11 +78,8 @@ if ($requestUri === '/upload/' && $method === 'POST') {
     } elseif (preg_match('/\.zip$/i', $filename)) {
         try {
             $zip = new ZipArchive();
-            $tmpZip = tempnam(sys_get_temp_dir(), 'zip_');
-            file_put_contents($tmpZip, $contents);
 
-            if ($zip->open($tmpZip) !== true) {
-                unlink($tmpZip);
+            if ($zip->open($tmpPath) !== true) {
                 jsonResponse(['detail' => 'Failed to open ZIP file'], 400);
             }
 
@@ -94,7 +91,6 @@ if ($requestUri === '/upload/' && $method === 'POST') {
                 }
             }
             $zip->close();
-            unlink($tmpZip);
 
             $count = parsePlanHtmlFolderAndSave($htmlFiles);
             jsonResponse(['message' => "Successfully processed {$count} lessons from ZIP archive"]);
