@@ -193,75 +193,134 @@ function parsePlanXmlAndSave(string $contents): int {
 function parsePlanHtmlFolderAndSave(array $htmlFiles): int {
     $count = 0;
     $lessons = loadJson('lessons');
-    $dayMap = [
-        'poniedziałek' => 1, 'pon' => 1,
-        'wtorek' => 2, 'wt' => 2,
-        'środa' => 3, 'śr' => 3,
-        'czwartek' => 4, 'czw' => 4,
-        'piątek' => 5, 'pt' => 5,
-    ];
 
-    foreach ($htmlFiles as $filename => $contents) {
-        try {
+    // Build name maps from lista.html
+    $classNameMap = [];   // "o36.html" => "4TMe 4technik mechatronik"
+    $teacherNameMap = []; // "n9.html"  => ["name" => "A.Skoczek (SK)", "short" => "SK"]
+
+    foreach ($htmlFiles as $filename => $content) {
+        if (basename($filename) === 'lista.html') {
             $dom = new DOMDocument();
-            @$dom->loadHTML('<?xml encoding="UTF-8">' . $contents, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            @$dom->loadHTML('<?xml encoding="UTF-8">' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            foreach ($dom->getElementsByTagName('a') as $link) {
+                $base = basename($link->getAttribute('href'));
+                $text = trim($link->textContent);
+                if (preg_match('/^o\d+\.html$/i', $base)) {
+                    $classNameMap[$base] = $text;
+                } elseif (preg_match('/^n\d+\.html$/i', $base)) {
+                    $short = '';
+                    if (preg_match('/\((\w+)\)\s*$/', $text, $m)) {
+                        $short = $m[1];
+                    }
+                    $teacherNameMap[$base] = ['name' => $text, 'short' => $short];
+                }
+            }
+            break;
+        }
+    }
 
-            $className = strtoupper(preg_replace('/\.(html|htm)$/i', '', basename($filename)));
+    // Process only class plan files (o*.html)
+    foreach ($htmlFiles as $filename => $contents) {
+        $base = basename($filename);
+        if (!preg_match('/^o\d+\.html$/i', $base)) continue;
+
+        try {
+            // Resolve class name
+            $fullClassName = $classNameMap[$base] ?? null;
+            if (!$fullClassName) {
+                $dom = new DOMDocument();
+                @$dom->loadHTML('<?xml encoding="UTF-8">' . $contents, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                $titles = $dom->getElementsByTagName('title');
+                if ($titles->length > 0 && preg_match('/[-–]\s*(\S+)/', $titles->item(0)->textContent, $m)) {
+                    $fullClassName = $m[1];
+                }
+            }
+            if (!$fullClassName) continue;
+
+            // Use short class name (first word) for consistency with substitutions
+            $className = explode(' ', $fullClassName)[0];
             [$classId] = getOrCreateClass($className);
 
-            $rows = $dom->getElementsByTagName('tr');
-            $first = true;
-            foreach ($rows as $row) {
-                if ($first) { $first = false; continue; }
+            $dom = new DOMDocument();
+            @$dom->loadHTML('<?xml encoding="UTF-8">' . $contents, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            $xpath = new DOMXPath($dom);
+
+            // Find timetable (table.tabela)
+            $tables = $xpath->query('//table[@class="tabela"]');
+            if ($tables->length === 0) continue;
+            $planTable = $tables->item(0);
+
+            $rows = $planTable->getElementsByTagName('tr');
+
+            for ($ri = 1; $ri < $rows->length; $ri++) {
+                $row = $rows->item($ri);
 
                 $cells = [];
                 foreach ($row->childNodes as $child) {
                     if ($child->nodeName === 'td' || $child->nodeName === 'th') {
-                        $cells[] = trim($child->textContent);
+                        $cells[] = $child;
                     }
                 }
 
-                if (count($cells) < 3) continue;
+                // Columns: 0=Nr, 1=Godz, 2=Mon, 3=Tue, 4=Wed, 5=Thu, 6=Fri
+                if (count($cells) < 7) continue;
 
-                try {
-                    $lessonNumText = $cells[0];
-                    preg_match('/\d+/', $lessonNumText, $m);
-                    $lessonNum = isset($m[0]) ? (int)$m[0] : 1;
+                $lessonNumText = trim($cells[0]->textContent);
+                preg_match('/\d+/', $lessonNumText, $nm);
+                if (!isset($nm[0])) continue;
+                $lessonNum = (int)$nm[0];
+                if ($lessonNum <= 0) continue;
 
-                    $dayOfWeek = 1;
-                    $dayText = mb_strtolower($cells[1] ?? '');
-                    foreach ($dayMap as $dayName => $dayNum) {
-                        if (mb_strpos($dayText, $dayName) !== false) {
-                            $dayOfWeek = $dayNum;
-                            break;
+                for ($di = 0; $di < 5; $di++) {
+                    $dayOfWeek = $di + 1;
+                    $cell = $cells[$di + 2];
+
+                    // Each <span class="p"> is one lesson entry
+                    foreach ($xpath->query('.//span[@class="p"]', $cell) as $subjectSpan) {
+                        $subject = trim($subjectSpan->textContent);
+                        if (!$subject) continue;
+
+                        // Teacher and classroom are siblings within the same container
+                        $container = $subjectSpan->parentNode;
+                        $teacherNodes = $xpath->query('.//a[@class="n"]', $container);
+                        $classroomNodes = $xpath->query('.//a[@class="s"]', $container);
+
+                        if ($teacherNodes->length === 0) continue;
+
+                        $teacherAnchor = $teacherNodes->item(0);
+                        $teacherShort = trim($teacherAnchor->textContent);
+                        $teacherFile = basename($teacherAnchor->getAttribute('href'));
+
+                        $classroomName = $classroomNodes->length > 0
+                            ? trim($classroomNodes->item(0)->textContent)
+                            : '';
+
+                        // Resolve full teacher name from lista map
+                        $teacherName = $teacherShort;
+                        $teacherShortName = $teacherShort;
+                        if ($teacherFile && isset($teacherNameMap[$teacherFile])) {
+                            $teacherName = $teacherNameMap[$teacherFile]['name'];
+                            $teacherShortName = $teacherNameMap[$teacherFile]['short'] ?: $teacherShort;
                         }
+
+                        [$teacherId] = getOrCreateTeacher($teacherName, $teacherShortName);
+
+                        $classroomId = null;
+                        if ($classroomName !== '' && $classroomName !== '-') {
+                            [$classroomId] = getOrCreateClassroom($classroomName);
+                        }
+
+                        $lessons[] = [
+                            'id' => nextId($lessons),
+                            'teacher_id' => $teacherId,
+                            'class_id' => $classId,
+                            'classroom_id' => $classroomId,
+                            'subject' => $subject,
+                            'day_of_week' => $dayOfWeek,
+                            'lesson_number' => $lessonNum,
+                        ];
+                        $count++;
                     }
-
-                    $teacherName = $cells[2] ?? '';
-                    $subject = $cells[3] ?? '';
-                    $classroomName = ($cells[4] ?? '') ?: null;
-
-                    if (!$teacherName || !$subject) continue;
-
-                    [$teacherId] = getOrCreateTeacher($teacherName);
-
-                    $classroomId = null;
-                    if ($classroomName && $classroomName !== '-') {
-                        [$classroomId] = getOrCreateClassroom($classroomName);
-                    }
-
-                    $lessons[] = [
-                        'id' => nextId($lessons),
-                        'teacher_id' => $teacherId,
-                        'class_id' => $classId,
-                        'classroom_id' => $classroomId,
-                        'subject' => $subject,
-                        'day_of_week' => $dayOfWeek,
-                        'lesson_number' => $lessonNum,
-                    ];
-                    $count++;
-                } catch (Exception $e) {
-                    continue;
                 }
             }
         } catch (Exception $e) {

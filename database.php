@@ -10,17 +10,25 @@ function loadJson(string $name): array {
 }
 
 function saveJson(string $name, array $data): void {
-    file_put_contents(DATA_DIR . "/{$name}.json", json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    $path = DATA_DIR . "/{$name}.json";
+    $result = file_put_contents($path, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    if ($result === false) {
+        throw new Exception("Nie można zapisać pliku '{$name}.json'. Sprawdź uprawnienia katalogu: " . DATA_DIR);
+    }
 }
 
 function initDatabase(): void {
     if (!is_dir(DATA_DIR)) {
-        mkdir(DATA_DIR, 0755, true);
+        if (!mkdir(DATA_DIR, 0777, true)) {
+            throw new Exception("Nie można utworzyć katalogu danych: " . DATA_DIR);
+        }
     }
     foreach (['teachers', 'classes', 'classrooms', 'lessons', 'substitutions'] as $file) {
         $path = DATA_DIR . "/{$file}.json";
         if (!file_exists($path)) {
-            file_put_contents($path, '[]');
+            if (file_put_contents($path, '[]') === false) {
+                throw new Exception("Nie można zainicjować pliku '{$file}.json'. Sprawdź uprawnienia katalogu: " . DATA_DIR);
+            }
         }
     }
 }
@@ -30,13 +38,13 @@ function nextId(array $items): int {
     return max(array_column($items, 'id')) + 1;
 }
 
-function getOrCreateTeacher(string $name): array {
+function getOrCreateTeacher(string $name, ?string $shortName = null): array {
     $teachers = loadJson('teachers');
     foreach ($teachers as $t) {
         if ($t['name'] === $name) return [$t['id'], $teachers];
     }
     $id = nextId($teachers);
-    $teacher = ['id' => $id, 'name' => $name, 'short_name' => mb_substr($name, 0, 10)];
+    $teacher = ['id' => $id, 'name' => $name, 'short_name' => $shortName ?? mb_substr($name, 0, 10)];
     $teachers[] = $teacher;
     saveJson('teachers', $teachers);
     return [$id, $teachers];
