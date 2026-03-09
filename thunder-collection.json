@@ -1,0 +1,275 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "Zastępstwa API",
+  "dateExported": "2026-03-09",
+  "version": "1.2",
+  "folders": [
+    { "id": "f-general",  "name": "Ogólne",       "containerId": "" },
+    { "id": "f-teachers", "name": "Nauczyciele",   "containerId": "" },
+    { "id": "f-classes",  "name": "Klasy",         "containerId": "" },
+    { "id": "f-rooms",    "name": "Sale",           "containerId": "" },
+    { "id": "f-subs",     "name": "Zastępstwa",     "containerId": "" },
+    { "id": "f-plan",     "name": "Plan lekcji",    "containerId": "" }
+  ],
+  "requests": [
+    {
+      "_id": "r-info",
+      "colId": "",
+      "containerId": "f-general",
+      "name": "Info API (bez klucza)",
+      "url": "http://localhost/zastepstwa_new/api/",
+      "method": "GET",
+      "headers": [],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-stats",
+      "colId": "",
+      "containerId": "f-general",
+      "name": "Statystyki",
+      "url": "http://localhost/zastepstwa_new/api/stats",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-search",
+      "colId": "",
+      "containerId": "f-general",
+      "name": "Szukaj (q=kowalski)",
+      "url": "http://localhost/zastepstwa_new/api/search",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [{ "name": "q", "value": "kowalski" }],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-auth-fail",
+      "colId": "",
+      "containerId": "f-general",
+      "name": "Błędny klucz (401)",
+      "url": "http://localhost/zastepstwa_new/api/stats",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "zly-klucz" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-teachers",
+      "colId": "",
+      "containerId": "f-teachers",
+      "name": "Lista nauczycieli",
+      "url": "http://localhost/zastepstwa_new/api/teachers",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-teachers-search",
+      "colId": "",
+      "containerId": "f-teachers",
+      "name": "Szukaj nauczyciela",
+      "url": "http://localhost/zastepstwa_new/api/teachers",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [{ "name": "q", "value": "Jan" }],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-teachers-page",
+      "colId": "",
+      "containerId": "f-teachers",
+      "name": "Nauczyciele – paginacja",
+      "url": "http://localhost/zastepstwa_new/api/teachers",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [
+        { "name": "limit", "value": "10" },
+        { "name": "offset", "value": "0" }
+      ],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-teacher-id",
+      "colId": "",
+      "containerId": "f-teachers",
+      "name": "Nauczyciel ID=1 (plan + zastępstwa)",
+      "url": "http://localhost/zastepstwa_new/api/teachers/1",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-teacher-404",
+      "colId": "",
+      "containerId": "f-teachers",
+      "name": "Nauczyciel nieistniejący (404)",
+      "url": "http://localhost/zastepstwa_new/api/teachers/9999",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-classes",
+      "colId": "",
+      "containerId": "f-classes",
+      "name": "Lista klas",
+      "url": "http://localhost/zastepstwa_new/api/classes",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-classes-search",
+      "colId": "",
+      "containerId": "f-classes",
+      "name": "Szukaj klasy (q=technik)",
+      "url": "http://localhost/zastepstwa_new/api/classes",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [{ "name": "q", "value": "technik" }],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-class-id",
+      "colId": "",
+      "containerId": "f-classes",
+      "name": "Klasa ID=1 (plan + zastępstwa)",
+      "url": "http://localhost/zastepstwa_new/api/classes/1",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-classrooms",
+      "colId": "",
+      "containerId": "f-rooms",
+      "name": "Lista sal",
+      "url": "http://localhost/zastepstwa_new/api/classrooms",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-subs-all",
+      "colId": "",
+      "containerId": "f-subs",
+      "name": "Wszystkie zastępstwa",
+      "url": "http://localhost/zastepstwa_new/api/substitutions",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-subs-date",
+      "colId": "",
+      "containerId": "f-subs",
+      "name": "Zastępstwa – jeden dzień",
+      "url": "http://localhost/zastepstwa_new/api/substitutions",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [{ "name": "date", "value": "2026-03-02" }],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-subs-range",
+      "colId": "",
+      "containerId": "f-subs",
+      "name": "Zastępstwa – zakres dat",
+      "url": "http://localhost/zastepstwa_new/api/substitutions",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [
+        { "name": "date_from", "value": "2026-03-02" },
+        { "name": "date_to",   "value": "2026-03-06" }
+      ],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-subs-class",
+      "colId": "",
+      "containerId": "f-subs",
+      "name": "Zastępstwa – po klasie",
+      "url": "http://localhost/zastepstwa_new/api/substitutions",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [{ "name": "class_id", "value": "1" }],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-subs-teacher",
+      "colId": "",
+      "containerId": "f-subs",
+      "name": "Zastępstwa – po nauczycielu",
+      "url": "http://localhost/zastepstwa_new/api/substitutions",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [{ "name": "teacher_id", "value": "1" }],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-subs-today",
+      "colId": "",
+      "containerId": "f-subs",
+      "name": "Dzisiejsze zastępstwa",
+      "url": "http://localhost/zastepstwa_new/api/substitutions/today",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-subs-upcoming",
+      "colId": "",
+      "containerId": "f-subs",
+      "name": "Nadchodzące (7 dni)",
+      "url": "http://localhost/zastepstwa_new/api/substitutions/upcoming",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-subs-upcoming-14",
+      "colId": "",
+      "containerId": "f-subs",
+      "name": "Nadchodzące (14 dni)",
+      "url": "http://localhost/zastepstwa_new/api/substitutions/upcoming",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [{ "name": "days", "value": "14" }],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-plan-class",
+      "colId": "",
+      "containerId": "f-plan",
+      "name": "Plan klasy ID=1 (cały tydzień)",
+      "url": "http://localhost/zastepstwa_new/api/plan/class/1",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    },
+    {
+      "_id": "r-plan-teacher",
+      "colId": "",
+      "containerId": "f-plan",
+      "name": "Plan nauczyciela ID=1 (cały tydzień)",
+      "url": "http://localhost/zastepstwa_new/api/plan/teacher/1",
+      "method": "GET",
+      "headers": [{ "name": "X-API-Key", "value": "asiakatalizator" }],
+      "params": [],
+      "body": { "type": "none" }
+    }
+  ]
+}
