@@ -107,8 +107,6 @@
 
     <main class="max-w-[1400px] mx-auto">
 
-
-        <!-- Control Bar (Usunięto @change, wszystko zarządza $watch w JS) -->
         <div class="bg-white p-4 sm:p-6 rounded-2xl border border-[#e2e5df] shadow-sm mb-8 flex flex-col md:flex-row gap-4 animate-reveal delay-1 max-w-3xl relative z-40 overflow-visible">
             <div class="flex-1">
                 <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2">Tryb widoku</label>
@@ -120,7 +118,7 @@
             </div>
 
             <div class="flex-[2] relative z-50">
-                <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2" x-text="selectedType === 'class' ? 'Wybierz Klasę' : 'Wybierz Nauczyciela'"></label>
+                <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2" x-text="selectedType === 'class' ? 'Wybierz Klasę' : selectedType === 'teacher' ? 'Wybierz Nauczyciela' : 'Wybierz Salę'"></label>
                 <div class="relative z-50" x-data="{ dropdownOpen: false, searchTerm: '' }" @click.away="dropdownOpen = false" x-init="$watch('dropdownOpen', (open) => { if (open) { setTimeout(() => { $el.querySelector('input')?.focus(); }, 0); } })">
                     <!-- Closed State - Button -->
                     <template x-if="!dropdownOpen">
@@ -128,7 +126,7 @@
                             @click="dropdownOpen = true"
                             class="w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer text-left flex items-center justify-between"
                         >
-                            <span x-text="selectedId ? (list.find(item => item.id == selectedId) ? (selectedType === 'class' ? list.find(item => item.id == selectedId).name.split(' ')[0] : (list.find(item => item.id == selectedId).short_name || list.find(item => item.id == selectedId).name)) : 'Wybierz z listy...') : 'Wybierz z listy...'"></span>
+                            <span x-text="selectedId ? (list.find(item => item.id == selectedId) ? (selectedType === 'class' ? list.find(item => item.id == selectedId).name.split(' ')[0] : selectedType === 'classroom' ? list.find(item => item.id == selectedId).name.split(' ')[0] : list.find(item => item.id == selectedId).name) : 'Wybierz z listy...') : (selectedType === 'class' ? 'Wybierz klasę...' : selectedType === 'teacher' ? 'Wybierz nauczyciela...' : 'Wybierz salę...')"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform">
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
@@ -163,8 +161,8 @@
                                         :title="item.name"
                                     >
                                         <div class="flex items-center gap-2">
-                                            <span class="font-medium text-[#1c211e]" x-text="selectedType === 'class' ? item.name : (item.short_name || item.name)"></span>
-                                            <span class="text-sm text-[#5c6661]" x-text="selectedType === 'class' ? item.full_name : ''"></span>
+                                            <span class="font-medium text-[#1c211e]" x-text="selectedType === 'class' ? item.name : selectedType === 'classroom' ? item.name.split(' ')[0] : item.name"></span>
+                                            <span class="text-sm text-[#5c6661]" x-text="selectedType === 'class' ? item.full_name : selectedType === 'classroom' ? item.name.split(' ').slice(1).join(' ') : (item.short_name || '')"></span>
                                         </div>
                                         <svg x-show="selectedId == item.id" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#90b918]">
                                             <polyline points="20 6 9 17 4 12"></polyline>
@@ -253,10 +251,16 @@
                                                         <div class="text-xs font-medium text-[#5c6661]">
                                                             <span x-show="selectedType === 'class'" x-text="lesson.teacher ? lesson.teacher.name : ''"></span>
                                                             <span x-show="selectedType === 'teacher'" x-text="lesson.school_class ? lesson.school_class.name : ''" class="inline-block bg-[#f4f5f2] px-1.5 py-0.5 rounded border border-[#e2e5df]"></span>
+                                                            <template x-if="selectedType === 'classroom'">
+                                                                <span class="flex flex-col gap-0.5">
+                                                                    <span x-text="lesson.teacher ? lesson.teacher.name : ''"></span>
+                                                                    <span x-text="lesson.school_class ? lesson.school_class.name : ''" class="inline-block bg-[#f4f5f2] px-1.5 py-0.5 rounded border border-[#e2e5df] w-fit"></span>
+                                                                </span>
+                                                            </template>
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="flex justify-end mt-1">
+                                                    <div class="flex justify-end mt-1" x-show="selectedType !== 'classroom'">
                                                         <span class="inline-flex items-center gap-1 bg-[#f4f8e8] border border-[#d6e8a0] text-[#5e7a0f] px-2 py-0.5 rounded-md text-xs font-bold shadow-sm" title="Sala">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                                                             <span x-text="lesson.classroom ? lesson.classroom.name : '-'"></span>
@@ -311,32 +315,31 @@
                 },
 
                 async fetchList() {
-                    let url = this.selectedType === 'class' ? 'plan/classes' : 'plan/teachers';
+                    let url = this.selectedType === 'class' ? 'plan/classes' : this.selectedType === 'teacher' ? 'plan/teachers' : 'plan/classrooms';
                     try {
                         let res = await fetch(url);
                         let allItems = await res.json();
-                        
+
                         // Filter items to only show those with available lessons
                         let itemsWithLessons = [];
                         for (let item of allItems) {
                             try {
-                                // Check if item has any lessons by checking day 1
-                                let checkUrl = this.selectedType === 'class' 
+                                let checkUrl = this.selectedType === 'class'
                                     ? `/plan/class/${item.id}?day=1`
-                                    : `/plan/teacher/${item.id}?day=1`;
+                                    : this.selectedType === 'teacher'
+                                    ? `/plan/teacher/${item.id}?day=1`
+                                    : `/plan/classroom/${item.id}?day=1`;
                                 let lessonRes = await fetch(checkUrl);
                                 let lessons = await lessonRes.json();
-                                
-                                // Include item only if it has lessons
+
                                 if (Array.isArray(lessons) && lessons.length > 0) {
                                     itemsWithLessons.push(item);
                                 }
                             } catch(e) {
-                                // If error checking, include the item anyway
                                 itemsWithLessons.push(item);
                             }
                         }
-                        
+
                         this.list = itemsWithLessons;
                         this.list.sort((a, b) => a.name.localeCompare(b.name));
                     } catch(e) { console.error(e); }
@@ -358,7 +361,9 @@
                         const fetchPromises = days.map(day => {
                             let url = this.selectedType === 'class'
                                 ? `plan/class/${this.selectedId}?day=${day}`
-                                : `plan/teacher/${this.selectedId}?day=${day}`;
+                                : this.selectedType === 'teacher'
+                                ? `plan/teacher/${this.selectedId}?day=${day}`
+                                : `plan/classroom/${this.selectedId}?day=${day}`;
                             return fetch(url).then(res => res.json()).then(data => ({ day, data }));
                         });
 

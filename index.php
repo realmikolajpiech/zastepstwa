@@ -175,6 +175,13 @@ if ($requestUri === '/plan/teachers' && $method === 'GET') {
     jsonResponse($teachers);
 }
 
+// GET /plan/classrooms
+if ($requestUri === '/plan/classrooms' && $method === 'GET') {
+    $classrooms = loadJson('classrooms');
+    usort($classrooms, fn($a, $b) => strcmp($a['name'], $b['name']));
+    jsonResponse($classrooms);
+}
+
 // GET /plan/class/{id}?day=
 if (preg_match('#^/plan/class/(\d+)$#', $requestUri, $matches) && $method === 'GET') {
     $classId = (int)$matches[1];
@@ -209,6 +216,27 @@ if (preg_match('#^/plan/teacher/(\d+)$#', $requestUri, $matches) && $method === 
     $result = [];
     foreach ($lessons as $l) {
         if ($l['teacher_id'] === $teacherId && $l['day_of_week'] === $day) {
+            $result[] = buildLessonResponse($l, $teachers, $classes, $classrooms);
+        }
+    }
+
+    usort($result, fn($a, $b) => $a['lesson_number'] <=> $b['lesson_number']);
+    jsonResponse($result);
+}
+
+// GET /plan/classroom/{id}?day=
+if (preg_match('#^/plan/classroom/(\d+)$#', $requestUri, $matches) && $method === 'GET') {
+    $classroomId = (int)$matches[1];
+    $day = (int)($_GET['day'] ?? 0);
+
+    $lessons = loadJson('lessons');
+    $teachers = loadJson('teachers');
+    $classes = loadJson('classes');
+    $classrooms = loadJson('classrooms');
+
+    $result = [];
+    foreach ($lessons as $l) {
+        if ($l['classroom_id'] === $classroomId && $l['day_of_week'] === $day) {
             $result[] = buildLessonResponse($l, $teachers, $classes, $classrooms);
         }
     }
