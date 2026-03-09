@@ -52,6 +52,17 @@ function parseHtmlAndSave(string $contents): int {
                 $lessonNum = (int)trim($lessonParts[0]);
                 if ($lessonNum <= 0) continue;
 
+                $lessonStartTime = null;
+                $lessonEndTime = null;
+                if (isset($lessonParts[1])) {
+                    $timeStr = trim($lessonParts[1]);
+                    $timeParts = explode('-', $timeStr);
+                    if (count($timeParts) === 2) {
+                        $lessonStartTime = trim($timeParts[0]);
+                        $lessonEndTime = trim($timeParts[1]);
+                    }
+                }
+
                 $originalTeacherName = trim($cells[1]);
                 $classNameRaw = trim($cells[2]);
                 $classParts = explode('|', $classNameRaw);
@@ -124,6 +135,8 @@ function parseHtmlAndSave(string $contents): int {
                     'id' => nextId($substitutions),
                     'date' => $dateFormatted,
                     'lesson_number' => $lessonNum,
+                    'lesson_start_time' => $lessonStartTime,
+                    'lesson_end_time' => $lessonEndTime,
                     'original_teacher_id' => $originalTeacherId,
                     'substitute_teacher_id' => $substituteTeacherId,
                     'class_id' => $classId,

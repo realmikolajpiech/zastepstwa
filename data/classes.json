@@ -1,194 +1,242 @@
 [
     {
         "id": 1,
-        "name": "3TB"
+        "name": "3TB",
+        "full_name": "3 technik budownictwa"
     },
     {
         "id": 2,
-        "name": "5TMe"
+        "name": "5TMe",
+        "full_name": "5 technik mechatronik"
     },
     {
         "id": 3,
-        "name": "2bme"
+        "name": "2bme",
+        "full_name": "2 mechanik.poj/elektryk"
     },
     {
         "id": 4,
-        "name": "3TGF"
+        "name": "3TGF",
+        "full_name": "3 technik żywienia.../technik usług fryzjerskich"
     },
     {
         "id": 5,
-        "name": "1be"
+        "name": "1be",
+        "full_name": "1 elektryk"
     },
     {
         "id": 6,
-        "name": "5TE"
+        "name": "5TE",
+        "full_name": "5 technik elektryk"
     },
     {
         "id": 7,
-        "name": "1TMe"
+        "name": "1TMe",
+        "full_name": "1 Technik mechatronik"
     },
     {
         "id": 8,
-        "name": "4TI"
+        "name": "4TI",
+        "full_name": "4 technik informatyk"
     },
     {
         "id": 9,
-        "name": "1TB"
+        "name": "1TB",
+        "full_name": "1 Technik budownictwa"
     },
     {
         "id": 10,
-        "name": "1bwb"
+        "name": "1bwb",
+        "full_name": "1 wielozawodowa"
     },
     {
         "id": 11,
-        "name": "1bm"
+        "name": "1bm",
+        "full_name": "1 mechanik poj.sam."
     },
     {
         "id": 12,
-        "name": "2TMe"
+        "name": "2TMe",
+        "full_name": "2 technik mechatronik"
     },
     {
         "id": 13,
-        "name": "4TGF"
+        "name": "4TGF",
+        "full_name": "4 technik żywienia.../technik usług fryzjerskich"
     },
     {
         "id": 14,
-        "name": "5TBG"
+        "name": "5TBG",
+        "full_name": "5 technik budownictwa/technik geodeta"
     },
     {
         "id": 15,
-        "name": "1TE"
+        "name": "1TE",
+        "full_name": "1 Technik elektryk"
     },
     {
         "id": 16,
-        "name": "4TMe"
+        "name": "4TMe",
+        "full_name": "4 technik mechatronik"
     },
     {
         "id": 17,
-        "name": "4TBG"
+        "name": "4TBG",
+        "full_name": "4 technik budownictwa/technik geodeta"
     },
     {
         "id": 18,
-        "name": "2THE"
+        "name": "2THE",
+        "full_name": "2 technik hotelarstwa/technik elektryk"
     },
     {
         "id": 19,
-        "name": "2TIP"
+        "name": "2TIP",
+        "full_name": "2 technik programista/technik informatyk"
     },
     {
         "id": 20,
-        "name": "1bwa"
+        "name": "1bwa",
+        "full_name": "1 wielozawodowa"
     },
     {
         "id": 21,
-        "name": "5TI"
+        "name": "5TI",
+        "full_name": "5 technik informatyk"
     },
     {
         "id": 22,
-        "name": "1bbk"
+        "name": "1bbk",
+        "full_name": "1 monter.zab/kucharz"
     },
     {
         "id": 23,
-        "name": "3TI"
+        "name": "3TI",
+        "full_name": "3 technik informatyk"
     },
     {
         "id": 24,
-        "name": "2bwb"
+        "name": "2bwb",
+        "full_name": "2 wielozawodowa"
     },
     {
         "id": 25,
-        "name": "3TP"
+        "name": "3TP",
+        "full_name": "3 technik programista"
     },
     {
         "id": 26,
-        "name": "3TMe"
+        "name": "3TMe",
+        "full_name": "3 technik mechatronik"
     },
     {
         "id": 27,
-        "name": "5TP"
+        "name": "5TP",
+        "full_name": "5 technik programista"
     },
     {
         "id": 28,
-        "name": "3bmk"
+        "name": "3bmk",
+        "full_name": "3 mechanik.poj.sam."
     },
     {
         "id": 29,
-        "name": "1TGF"
+        "name": "1TGF",
+        "full_name": "1 technik żywienia.../technik usług fryzjerskich"
     },
     {
         "id": 30,
-        "name": "3be"
+        "name": "3be",
+        "full_name": "3 elektryk"
     },
     {
         "id": 31,
-        "name": "1bwc"
+        "name": "1bwc",
+        "full_name": "1 wielozawodowa"
     },
     {
         "id": 32,
-        "name": "1bwd"
+        "name": "1bwd",
+        "full_name": "1 wielozawodowa"
     },
     {
         "id": 33,
-        "name": "3bwc"
+        "name": "3bwc",
+        "full_name": "3 wielozawodowa"
     },
     {
         "id": 34,
-        "name": "3bwb"
+        "name": "3bwb",
+        "full_name": "3 wielozawodowa"
     },
     {
         "id": 35,
-        "name": "4TH"
+        "name": "4TH",
+        "full_name": "4 technik hotelarstwa"
     },
     {
         "id": 36,
-        "name": "3TE"
+        "name": "3TE",
+        "full_name": "3 technik elektryk"
     },
     {
         "id": 37,
-        "name": "4TP"
+        "name": "4TP",
+        "full_name": "4 technik programista"
     },
     {
         "id": 38,
-        "name": "2bwa"
+        "name": "2bwa",
+        "full_name": "2 wielozawodowa"
     },
     {
         "id": 39,
-        "name": "4TE"
+        "name": "4TE",
+        "full_name": "4 technik elektryk"
     },
     {
         "id": 40,
-        "name": "1TAw"
+        "name": "1TAw",
+        "full_name": "1 Technik aranżacji wnętrz"
     },
     {
         "id": 41,
-        "name": "3TH"
+        "name": "3TH",
+        "full_name": "3 technik hotelarstwa"
     },
     {
         "id": 42,
-        "name": "1TH"
+        "name": "1TH",
+        "full_name": "1 Technik hotelarstwa"
     },
     {
         "id": 43,
-        "name": "3bwa"
+        "name": "3bwa",
+        "full_name": "3 wielozawodowa"
     },
     {
         "id": 44,
-        "name": "5TGs"
+        "name": "5TGs",
+        "full_name": "5 technik żywienia i usług gastronomicznych"
     },
     {
         "id": 45,
-        "name": "3bb"
+        "name": "3bb",
+        "full_name": "3 Monter zabudowy..."
     },
     {
         "id": 46,
-        "name": "1TIP"
+        "name": "1TIP",
+        "full_name": "1 technik informatyk/technik programista"
     },
     {
         "id": 47,
-        "name": "2bbk"
+        "name": "2bbk",
+        "full_name": "2 monter.zab/kucharz"
     },
     {
         "id": 48,
-        "name": "3bwd"
+        "name": "3bwd",
+        "full_name": "3 wielozawodowa"
     }
 ]
