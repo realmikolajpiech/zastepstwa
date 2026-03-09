@@ -127,7 +127,7 @@ body {
                     } catch (e) { console.error(e); }
                 },
                 getTime(lessonNumber) {
-                    const hour = this.hours.find(h => h.nr === lessonNumber);
+                    const hour = this.hours.find(h => h.nr === Number(lessonNumber));
                     return hour ? `${hour.start}-${hour.end}` : '-';
                 },
                 async fetchData() {

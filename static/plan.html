@@ -140,7 +140,7 @@
 
             <div class="flex-[2] relative z-50">
                 <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2" x-text="selectedType === 'class' ? 'Wybierz Klasę' : selectedType === 'teacher' ? 'Wybierz Nauczyciela' : 'Wybierz Salę'"></label>
-                <div class="relative z-50" x-data="{ dropdownOpen: false, searchTerm: '' }" @click.away="dropdownOpen = false" @open-picker.window="dropdownOpen = true" x-init="$watch('dropdownOpen', (open) => { if (open) { setTimeout(() => { $el.querySelector('input')?.focus(); }, 0); } })">
+                <div class="relative z-50" x-data="{ dropdownOpen: false, searchTerm: '' }" @click.away="dropdownOpen = false" @open-picker.window="$nextTick(() => dropdownOpen = true)" x-init="$watch('dropdownOpen', (open) => { if (open) { setTimeout(() => { $el.querySelector('input')?.focus(); }, 0); } })">
                     <!-- Closed State - Button -->
                     <template x-if="!dropdownOpen">
                         <button 
