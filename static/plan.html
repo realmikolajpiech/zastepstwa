@@ -250,7 +250,7 @@
                             <tr>
                                 <!-- Numer Lekcji -->
                                 <td class="py-3 px-2 text-center bg-[#fcfdfa]">
-                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#f4f5f2] border border-[#e2e5df] text-[#1c211e] font-bold shadow-sm" x-text="ln"></span>
+                                    <span class="text-[#5c6661] font-bold text-sm" x-text="ln"></span>
                                 </td>
                                 <!-- Godziny -->
                                 <td class="py-3 px-3 text-center bg-[#fcfdfa] whitespace-nowrap">
@@ -276,16 +276,14 @@
                                                             <span x-show="selectedType === 'class'" x-text="lesson.teacher ? cleanName(lesson.teacher.name) : ''"></span>
                                                             <span x-show="selectedType === 'teacher'" x-text="lesson.school_class ? lesson.school_class.name : ''" class="inline-block bg-[#f4f5f2] px-1.5 py-0.5 rounded border border-[#e2e5df]"></span>
                                                             <template x-if="selectedType === 'classroom'">
-                                                                <span class="flex flex-col gap-0.5">
-                                                                    <span x-text="lesson.teacher ? cleanName(lesson.teacher.name) : ''"></span>
-                                                                    <span x-text="lesson.school_class ? lesson.school_class.name : ''" class="inline-block bg-[#f4f5f2] px-1.5 py-0.5 rounded border border-[#e2e5df] w-fit"></span>
-                                                                </span>
+                                                                <span x-text="lesson.teacher ? cleanName(lesson.teacher.name) : ''"></span>
                                                             </template>
                                                         </div>
                                                         <span x-show="selectedType !== 'classroom'" class="inline-flex items-center gap-1 bg-[#f4f8e8] border border-[#d6e8a0] text-[#5e7a0f] px-2 py-0.5 rounded-md text-xs font-bold shadow-sm shrink-0" :title="lesson.classroom ? lesson.classroom.name : 'Sala'">
                                                             <span x-html="getSubjectIcon(lesson.subject || '', lesson.classroom ? lesson.classroom.name : '')"></span>
                                                             <span x-text="lesson.classroom ? lesson.classroom.name.split(' ')[0] : '-'"></span>
                                                         </span>
+                                                        <span x-show="selectedType === 'classroom'" x-text="lesson.school_class ? lesson.school_class.name : ''" class="inline-block bg-[#f4f5f2] px-1.5 py-0.5 rounded border border-[#e2e5df] text-xs font-bold shrink-0"></span>
                                                     </div>
                                                 </div>
                                             </template>

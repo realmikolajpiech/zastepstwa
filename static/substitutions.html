@@ -43,7 +43,7 @@ body {
         }
 </style>
 </head>
-<body class="min-h-screen pt-6 pb-0 px-0 sm:px-8" x-data="substitutionsApp()">
+<body class="min-h-screen pt-6 pb-0 px-0 sm:px-6" x-data="substitutionsApp()">
 
     <!-- Shared Header -->
     <!-- <header class="fixed top-0 left-0 w-full px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-[#e2e5df] z-50 animate-reveal">
@@ -116,24 +116,26 @@ body {
             return {
                 date: new Date().toISOString().split('T')[0],
                 substitutions: [],
-                hours: [],
+                hoursMap: {
+                    1: { start: "7:15", end: "8:00" },
+                    2: { start: "8:05", end: "8:50" },
+                    3: { start: "9:00", end: "9:45" },
+                    4: { start: "9:55", end: "10:40" },
+                    5: { start: "10:55", end: "11:40" },
+                    6: { start: "11:50", end: "12:35" },
+                    7: { start: "12:45", end: "13:30" },
+                    8: { start: "13:35", end: "14:20" },
+                    9: { start: "14:25", end: "15:10" },
+                    10: { start: "15:15", end: "16:00" },
+                    11: { start: "16:05", end: "16:50" },
+                    12: { start: "16:55", end: "17:40" }
+                },
                 loading: false,
-                async init() { 
-                    await this.fetchHours(); 
+                init() { 
                     this.fetchData(); 
                 },
-                async fetchHours() {
-                    try {
-                        const response = await fetch('hours.json');
-                        if (response.ok) { this.hours = await response.json(); } 
-                        else { console.error("Failed to fetch hours"); }
-                    } catch (e) { console.error(e); }
-                },
                 getTime(lessonNumber) {
-                    console.log('Szukam:', lessonNumber, 'Typ:', typeof lessonNumber);
-                    console.log('Dostępne godziny:', this.hours);
-                    const hour = this.hours.find(h => h.nr === Number(lessonNumber));
-                    console.log('Znaleziona godzina:', hour);
+                    const hour = this.hoursMap[Number(lessonNumber)];
                     return hour ? `${hour.start}-${hour.end}` : '-';
                 },
                 async fetchData() {
