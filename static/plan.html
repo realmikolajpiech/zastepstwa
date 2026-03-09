@@ -259,10 +259,10 @@
                                 
                                 <!-- Dni Tygodnia (1 = Pon, 5 = Pt) -->
                                 <template x-for="day in [1, 2, 3, 4, 5]" :key="day">
-                                    <td class="p-2 align-top bg-[#fcfdfa]">
-                                        
+                                    <td class="p-2 align-top bg-[#fcfdfa] h-px">
+
                                         <!-- Jeśli brak lekcji (puste okienko) -->
-                                        <div x-show="!weekPlan[ln] || !weekPlan[ln][day]" class="h-full w-full min-h-[5rem] rounded-xl border border-dashed border-[#e2e5df] flex items-center justify-center opacity-40">
+                                        <div x-show="!weekPlan[ln] || !weekPlan[ln][day]" class="h-full w-full rounded-xl border border-dashed border-[#e2e5df] flex items-center justify-center opacity-40">
                                             <span class="w-2 h-0.5 bg-[#e2e5df] rounded"></span>
                                         </div>
 
