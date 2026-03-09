@@ -69,6 +69,14 @@ function getPaginationParams(): array {
     return [$limit, $offset];
 }
 
+function getHour(int $lessonNumber): ?array {
+    $hours = loadJson('hours');
+    foreach ($hours as $h) {
+        if ((int)$h['nr'] === $lessonNumber) return $h;
+    }
+    return null;
+}
+
 function dayName(int $day): string {
     return ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'][$day - 1] ?? "Dzień $day";
 }
@@ -79,10 +87,14 @@ function buildSubstitution(array $s, array $teachers, array $classes, array $cla
     $cl = findById($classes, $s['class_id']);
     $cr = findById($classrooms, $s['classroom_id']);
 
+    $hour = getHour($s['lesson_number']);
+
     return [
         'id'             => $s['id'],
         'date'           => $s['date'],
         'lesson_number'  => $s['lesson_number'],
+        'lesson_start'   => $hour['start'] ?? ($s['lesson_start_time'] ?? null),
+        'lesson_end'     => $hour['end']   ?? ($s['lesson_end_time']   ?? null),
         'subject'        => $s['subject'],
         'cause'          => $s['cause'],
         'note'           => $s['note'] ?: null,
@@ -110,15 +122,18 @@ function buildSubstitution(array $s, array $teachers, array $classes, array $cla
 }
 
 function buildLesson(array $l, array $teachers, array $classes, array $classrooms): array {
-    $t  = findById($teachers, $l['teacher_id']);
-    $cl = findById($classes, $l['class_id']);
-    $cr = findById($classrooms, $l['classroom_id']);
+    $t    = findById($teachers, $l['teacher_id']);
+    $cl   = findById($classes, $l['class_id']);
+    $cr   = findById($classrooms, $l['classroom_id']);
+    $hour = getHour($l['lesson_number']);
 
     return [
         'id'            => $l['id'],
         'day_of_week'   => $l['day_of_week'],
         'day_name'      => dayName($l['day_of_week']),
         'lesson_number' => $l['lesson_number'],
+        'lesson_start'  => $hour['start'] ?? null,
+        'lesson_end'    => $hour['end']   ?? null,
         'subject'       => $l['subject'],
         'teacher' => $t ? [
             'id'         => $t['id'],
@@ -172,6 +187,7 @@ function handleApi(string $path, string $method): void {
             ],
             'endpoints' => [
                 ['method' => 'GET', 'path' => '/api/',                       'description' => 'Informacje o API'],
+                ['method' => 'GET', 'path' => '/api/hours',                  'description' => 'Godziny lekcji (nr, start, end)'],
                 ['method' => 'GET', 'path' => '/api/stats',                  'description' => 'Statystyki systemu'],
                 ['method' => 'GET', 'path' => '/api/teachers',               'description' => 'Lista wszystkich nauczycieli', 'params' => ['limit', 'offset', 'q (szukaj)']],
                 ['method' => 'GET', 'path' => '/api/teachers/{id}',          'description' => 'Szczegóły nauczyciela wraz z planem'],
@@ -190,6 +206,13 @@ function handleApi(string $path, string $method): void {
 
     // Wszystkie dalsze endpointy wymagają autoryzacji
     checkApiKey();
+
+    // ── GET /api/hours ──────────────────────────────────────────────────────
+    if ($path === '/hours' && $method === 'GET') {
+        $hours = loadJson('hours');
+        usort($hours, fn($a, $b) => $a['nr'] <=> $b['nr']);
+        apiResponse(['count' => count($hours), 'data' => $hours]);
+    }
 
     // ── GET /api/stats ──────────────────────────────────────────────────────
     if ($path === '/stats' && $method === 'GET') {

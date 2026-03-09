@@ -23,7 +23,7 @@ function initDatabase(): void {
             throw new Exception("Nie można utworzyć katalogu danych: " . DATA_DIR);
         }
     }
-    foreach (['teachers', 'classes', 'classrooms', 'lessons', 'substitutions'] as $file) {
+    foreach (['teachers', 'classes', 'classrooms', 'lessons', 'substitutions', 'hours'] as $file) {
         $path = DATA_DIR . "/{$file}.json";
         if (!file_exists($path)) {
             if (file_put_contents($path, '[]') === false) {

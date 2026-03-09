@@ -232,6 +232,46 @@ function parsePlanHtmlFolderAndSave(array $htmlFiles): int {
         }
     }
 
+    // Extract lesson hours from any class plan file and save to hours.json
+    $hoursExtracted = false;
+    foreach ($htmlFiles as $filename => $contents) {
+        $base = basename($filename);
+        if (!preg_match('/^o\d+\.html$/i', $base)) continue;
+
+        $domH = new DOMDocument();
+        @$domH->loadHTML('<?xml encoding="UTF-8">' . $contents, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $xpathH = new DOMXPath($domH);
+        $tables = $xpathH->query('//table[@class="tabela"]');
+        if ($tables->length === 0) continue;
+        $planTable = $tables->item(0);
+        $rows = $planTable->getElementsByTagName('tr');
+        $hours = [];
+        for ($ri = 1; $ri < $rows->length; $ri++) {
+            $row = $rows->item($ri);
+            $cells = [];
+            foreach ($row->childNodes as $child) {
+                if ($child->nodeName === 'td' || $child->nodeName === 'th') {
+                    $cells[] = $child;
+                }
+            }
+            if (count($cells) < 2) continue;
+            $nrText = trim($cells[0]->textContent);
+            preg_match('/\d+/', $nrText, $nm);
+            if (!isset($nm[0])) continue;
+            $nr = (int)$nm[0];
+            $godzText = trim($cells[1]->textContent);
+            // Format: " 7:15- 8:00"
+            if (preg_match('/(\d+:\d+)\s*-\s*(\d+:\d+)/', $godzText, $tm)) {
+                $hours[] = ['nr' => $nr, 'start' => $tm[1], 'end' => $tm[2]];
+            }
+        }
+        if (!empty($hours)) {
+            saveJson('hours', $hours);
+            $hoursExtracted = true;
+            break;
+        }
+    }
+
     // Process only class plan files (o*.html)
     foreach ($htmlFiles as $filename => $contents) {
         $base = basename($filename);
