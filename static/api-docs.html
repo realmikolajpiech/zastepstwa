@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zastępstwa API – Dokumentacja</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: #161b27;
+      border-right: 1px solid #1e2535;
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid #1e2535;
+      margin-bottom: 16px;
+    }
+
+    .sidebar-logo h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .5px;
+    }
+
+    .sidebar-logo span {
+      font-size: 11px;
+      color: #4a5568;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .sidebar-section {
+      padding: 6px 20px 2px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #4a5568;
+      margin-top: 10px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 20px;
+      font-size: 13px;
+      color: #94a3b8;
+      text-decoration: none;
+      transition: background .15s, color .15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar a:hover { background: #1e2535; color: #fff; border-left-color: #3b82f6; }
+
+    .sidebar .badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-left: auto;
+    }
+    .badge-get  { background: #1d4ed8; color: #93c5fd; }
+    .badge-post { background: #065f46; color: #6ee7b7; }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      padding: 48px 56px;
+      max-width: 900px;
+    }
+
+    h1 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .subtitle { font-size: 14px; color: #64748b; margin-bottom: 40px; }
+
+    /* ── Auth box ── */
+    .auth-box {
+      background: #161b27;
+      border: 1px solid #1e2535;
+      border-left: 3px solid #3b82f6;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+    }
+    .auth-box h3 { font-size: 13px; font-weight: 700; color: #93c5fd; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+    .auth-box p  { font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 8px; }
+    .auth-box code { background: #0f1117; color: #fbbf24; padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: 'Courier New', monospace; }
+
+    /* ── Section heading ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #4a5568;
+      margin: 40px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #1e2535;
+    }
+
+    /* ── Endpoint card ── */
+    .endpoint {
+      background: #161b27;
+      border: 1px solid #1e2535;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s;
+    }
+    .endpoint-header:hover { background: #1a2030; }
+
+    .method {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      min-width: 40px;
+      text-align: center;
+      font-family: monospace;
+    }
+    .method-get  { background: #1d4ed8; color: #bfdbfe; }
+    .method-post { background: #065f46; color: #6ee7b7; }
+
+    .endpoint-path {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #e2e8f0;
+      flex: 1;
+    }
+    .endpoint-path .param { color: #f59e0b; }
+
+    .endpoint-desc { font-size: 12px; color: #64748b; }
+
+    .auth-required {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #292524;
+      color: #a8a29e;
+    }
+
+    .chevron { color: #4a5568; font-size: 12px; transition: transform .2s; }
+    .endpoint.open .chevron { transform: rotate(90deg); }
+
+    .endpoint-body {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1px solid #1e2535;
+    }
+    .endpoint.open .endpoint-body { display: block; }
+
+    .endpoint-body p { font-size: 13px; color: #94a3b8; margin: 14px 0 10px; line-height: 1.6; }
+
+    /* Params table */
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+    th { text-align: left; padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: .8px; color: #4a5568; background: #0f1117; }
+    td { padding: 8px 10px; border-top: 1px solid #1e2535; color: #94a3b8; vertical-align: top; }
+    td:first-child { font-family: monospace; color: #fbbf24; }
+    td.opt  { color: #64748b; }
+
+    /* Code block */
+    .code-block {
+      background: #0a0d14;
+      border: 1px solid #1e2535;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin: 12px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #7dd3fc;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.6;
+    }
+    .code-block .label { color: #4a5568; display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase; letter-spacing: .6px; }
+    .code-block .key   { color: #94a3b8; }
+    .code-block .str   { color: #86efac; }
+    .code-block .num   { color: #fbbf24; }
+    .code-block .bool  { color: #c084fc; }
+    .code-block .null  { color: #f87171; }
+    .code-block .url   { color: #7dd3fc; }
+
+    /* ── Footer ── */
+    .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #1e2535; font-size: 12px; color: #374151; }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <h2>Zastępstwa API</h2>
+      <span>v1.0.0 &nbsp;·&nbsp; REST</span>
+    </div>
+
+    <div class="sidebar-section">Ogólne</div>
+    <a href="#auth"><span>🔑</span> Autoryzacja</a>
+    <a href="#info"><span class="badge badge-get">GET</span> /api/</a>
+    <a href="#stats"><span class="badge badge-get">GET</span> /api/stats</a>
+    <a href="#search"><span class="badge badge-get">GET</span> /api/search</a>
+
+    <div class="sidebar-section">Nauczyciele</div>
+    <a href="#teachers"><span class="badge badge-get">GET</span> /api/teachers</a>
+    <a href="#teacher-id"><span class="badge badge-get">GET</span> /api/teachers/{id}</a>
+
+    <div class="sidebar-section">Klasy</div>
+    <a href="#classes"><span class="badge badge-get">GET</span> /api/classes</a>
+    <a href="#class-id"><span class="badge badge-get">GET</span> /api/classes/{id}</a>
+
+    <div class="sidebar-section">Sale</div>
+    <a href="#classrooms"><span class="badge badge-get">GET</span> /api/classrooms</a>
+
+    <div class="sidebar-section">Zastępstwa</div>
+    <a href="#subs"><span class="badge badge-get">GET</span> /api/substitutions</a>
+    <a href="#subs-today"><span class="badge badge-get">GET</span> /api/substitutions/today</a>
+    <a href="#subs-upcoming"><span class="badge badge-get">GET</span> /api/substitutions/upcoming</a>
+
+    <div class="sidebar-section">Plan</div>
+    <a href="#plan-class"><span class="badge badge-get">GET</span> /api/plan/class/{id}</a>
+    <a href="#plan-teacher"><span class="badge badge-get">GET</span> /api/plan/teacher/{id}</a>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main">
+    <h1>Zastępstwa API</h1>
+    <p class="subtitle">REST API systemu zastępstw szkolnych &nbsp;·&nbsp; v1.0.0 &nbsp;·&nbsp; JSON</p>
+
+    <!-- Auth -->
+    <div id="auth" class="auth-box">
+      <h3>Autoryzacja</h3>
+      <p>Każde żądanie (poza <code>GET /api/</code>) wymaga klucza API:</p>
+      <p><strong>Nagłówek:</strong> &nbsp;<code>X-API-Key: asiakatalizator</code></p>
+      <p><strong>lub parametr:</strong> &nbsp;<code>?api_key=asiakatalizator</code></p>
+      <p>Błędny lub brakujący klucz zwróci <code>401 Unauthorized</code>.</p>
+    </div>
+
+    <!-- === OGÓLNE === -->
+    <div class="section-title">Ogólne</div>
+
+    <div id="info" class="endpoint open">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/</span>
+        <span class="endpoint-desc">Informacje o API</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Zwraca opis API i listę wszystkich dostępnych endpointów. <strong>Nie wymaga autoryzacji.</strong></p>
+        <div class="code-block"><span class="label">Przykład odpowiedzi</span><span class="key">{
+  "name": </span><span class="str">"Zastępstwa API"</span><span class="key">,
+  "version": </span><span class="str">"1.0.0"</span><span class="key">,
+  "auth": {
+    "type": </span><span class="str">"api_key"</span><span class="key">,
+    "header": </span><span class="str">"X-API-Key"</span><span class="key">,
+    "param": </span><span class="str">"api_key"</span><span class="key">
+  },
+  "endpoints": [...]
+}</span></div>
+      </div>
+    </div>
+
+    <div id="stats" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/stats</span>
+        <span class="endpoint-desc">Statystyki systemu</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Zwraca liczniki danych w systemie, dzisiejsze zastępstwa i top przyczyny nieobecności.</p>
+        <div class="code-block"><span class="label">Przykład odpowiedzi</span><span class="key">{
+  "counts": {
+    "teachers": </span><span class="num">99</span><span class="key">,
+    "classes": </span><span class="num">48</span><span class="key">,
+    "classrooms": </span><span class="num">64</span><span class="key">,
+    "lessons": </span><span class="num">3654</span><span class="key">,
+    "substitutions": </span><span class="num">92</span><span class="key">
+  },
+  "substitutions": {
+    "today": </span><span class="num">5</span><span class="key">,
+    "earliest_date": </span><span class="str">"2026-03-02"</span><span class="key">,
+    "latest_date": </span><span class="str">"2026-03-06"</span><span class="key">,
+    "top_causes": {
+      "Zwolnienie lekarskie": </span><span class="num">53</span><span class="key">,
+      "Erasmus-opieka": </span><span class="num">29</span><span class="key">
+    }
+  },
+  "generated_at": </span><span class="str">"2026-03-09T12:00:00+00:00"</span><span class="key">
+}</span></div>
+      </div>
+    </div>
+
+    <div id="search" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/search?<span class="param">q=</span></span>
+        <span class="endpoint-desc">Szukaj nauczycieli i klas</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Przeszukuje nauczycieli i klasy po frazie. Minimalna długość frazy: 2 znaki.</p>
+        <table>
+          <tr><th>Parametr</th><th>Typ</th><th>Opis</th></tr>
+          <tr><td>q</td><td>string</td><td>Fraza wyszukiwania (min. 2 znaki) – wymagany</td></tr>
+        </table>
+        <div class="code-block"><span class="label">GET /api/search?q=Kowalski&amp;api_key=asiakatalizator</span><span class="key">{
+  "query": </span><span class="str">"Kowalski"</span><span class="key">,
+  "teachers": [
+    { "id": </span><span class="num">3</span><span class="key">, "name": </span><span class="str">"Kowalski Oskar"</span><span class="key">, "short_name": </span><span class="str">"Kowalski O"</span><span class="key"> }
+  ],
+  "classes": [],
+  "total": </span><span class="num">1</span><span class="key">
+}</span></div>
+      </div>
+    </div>
+
+    <!-- === NAUCZYCIELE === -->
+    <div class="section-title">Nauczyciele</div>
+
+    <div id="teachers" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/teachers</span>
+        <span class="endpoint-desc">Lista wszystkich nauczycieli</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Zwraca posortowaną listę nauczycieli. Obsługuje wyszukiwanie i paginację.</p>
+        <table>
+          <tr><th>Parametr</th><th>Typ</th><th>Opis</th></tr>
+          <tr><td>q</td><td>string</td><td>Filtruj po nazwisku lub skrócie</td></tr>
+          <tr><td>limit</td><td>int</td><td>Liczba wyników (0 = wszystkie)</td></tr>
+          <tr><td>offset</td><td>int</td><td>Pomiń pierwsze N wyników</td></tr>
+        </table>
+        <div class="code-block"><span class="label">Przykład odpowiedzi</span><span class="key">{
+  "total": </span><span class="num">99</span><span class="key">,
+  "limit": </span><span class="num">10</span><span class="key">,
+  "offset": </span><span class="num">0</span><span class="key">,
+  "count": </span><span class="num">10</span><span class="key">,
+  "data": [
+    { "id": </span><span class="num">1</span><span class="key">, "name": </span><span class="str">"Aleksiewicz-Drab Marta"</span><span class="key">, "short_name": </span><span class="str">"Aleksiewic"</span><span class="key"> },
+    ...
+  ]
+}</span></div>
+      </div>
+    </div>
+
+    <div id="teacher-id" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/teachers/<span class="param">{id}</span></span>
+        <span class="endpoint-desc">Szczegóły nauczyciela</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Zwraca dane nauczyciela, jego pełny plan tygodniowy i ostatnie zastępstwa (30 dni).</p>
+        <div class="code-block"><span class="label">GET /api/teachers/3</span><span class="key">{
+  "id": </span><span class="num">3</span><span class="key">,
+  "name": </span><span class="str">"Kowalski Oskar"</span><span class="key">,
+  "short_name": </span><span class="str">"Kowalski O"</span><span class="key">,
+  "plan": [
+    {
+      "day": </span><span class="num">1</span><span class="key">,
+      "day_name": </span><span class="str">"Poniedziałek"</span><span class="key">,
+      "lessons": [
+        {
+          "lesson_number": </span><span class="num">2</span><span class="key">,
+          "subject": </span><span class="str">"Matematyka"</span><span class="key">,
+          "classroom": { "id": </span><span class="num">5</span><span class="key">, "name": </span><span class="str">"203"</span><span class="key"> },
+          "class": { "id": </span><span class="num">4</span><span class="key">, "name": </span><span class="str">"3TGF"</span><span class="key"> }
+        }
+      ]
+    }
+  ],
+  "recent_substitutions": [...]
+}</span></div>
+      </div>
+    </div>
+
+    <!-- === KLASY === -->
+    <div class="section-title">Klasy</div>
+
+    <div id="classes" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/classes</span>
+        <span class="endpoint-desc">Lista wszystkich klas</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Posortowana lista klas z pełnymi nazwami. Obsługuje wyszukiwanie i paginację.</p>
+        <table>
+          <tr><th>Parametr</th><th>Typ</th><th>Opis</th></tr>
+          <tr><td>q</td><td>string</td><td>Filtruj po skrócie lub pełnej nazwie klasy</td></tr>
+          <tr><td>limit</td><td>int</td><td>Liczba wyników (0 = wszystkie)</td></tr>
+          <tr><td>offset</td><td>int</td><td>Pomiń pierwsze N wyników</td></tr>
+        </table>
+        <div class="code-block"><span class="label">Przykład odpowiedzi</span><span class="key">{
+  "total": </span><span class="num">48</span><span class="key">,
+  "limit": </span><span class="num">48</span><span class="key">,
+  "offset": </span><span class="num">0</span><span class="key">,
+  "count": </span><span class="num">48</span><span class="key">,
+  "data": [
+    { "id": </span><span class="num">1</span><span class="key">, "name": </span><span class="str">"3TB"</span><span class="key">, "full_name": </span><span class="str">"3 technik budownictwa"</span><span class="key"> },
+    ...
+  ]
+}</span></div>
+      </div>
+    </div>
+
+    <div id="class-id" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/classes/<span class="param">{id}</span></span>
+        <span class="endpoint-desc">Szczegóły klasy</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Zwraca dane klasy, pełny plan tygodniowy i ostatnie zastępstwa (30 dni).</p>
+        <div class="code-block"><span class="label">GET /api/classes/1</span><span class="key">{
+  "id": </span><span class="num">1</span><span class="key">,
+  "name": </span><span class="str">"3TB"</span><span class="key">,
+  "full_name": </span><span class="str">"3 technik budownictwa"</span><span class="key">,
+  "plan": [ { "day": </span><span class="num">1</span><span class="key">, "day_name": </span><span class="str">"Poniedziałek"</span><span class="key">, "lessons": [...] } ],
+  "plan_flat": [...],
+  "recent_substitutions": [...]
+}</span></div>
+      </div>
+    </div>
+
+    <!-- === SALE === -->
+    <div class="section-title">Sale lekcyjne</div>
+
+    <div id="classrooms" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/classrooms</span>
+        <span class="endpoint-desc">Lista wszystkich sal</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Posortowana lista sal lekcyjnych. Obsługuje paginację.</p>
+        <table>
+          <tr><th>Parametr</th><th>Typ</th><th>Opis</th></tr>
+          <tr><td>limit</td><td>int</td><td>Liczba wyników (0 = wszystkie)</td></tr>
+          <tr><td>offset</td><td>int</td><td>Pomiń pierwsze N wyników</td></tr>
+        </table>
+        <div class="code-block"><span class="label">Przykład odpowiedzi</span><span class="key">{
+  "total": </span><span class="num">64</span><span class="key">,
+  "data": [
+    { "id": </span><span class="num">1</span><span class="key">, "name": </span><span class="str">"101"</span><span class="key"> },
+    { "id": </span><span class="num">2</span><span class="key">, "name": </span><span class="str">"102"</span><span class="key"> },
+    ...
+  ]
+}</span></div>
+      </div>
+    </div>
+
+    <!-- === ZASTĘPSTWA === -->
+    <div class="section-title">Zastępstwa</div>
+
+    <div id="subs" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/substitutions</span>
+        <span class="endpoint-desc">Zastępstwa z filtrami</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Zwraca zastępstwa z opcjonalnymi filtrami. Wyniki posortowane po dacie i numerze lekcji.</p>
+        <table>
+          <tr><th>Parametr</th><th>Typ</th><th>Opis</th></tr>
+          <tr><td>date</td><td>string</td><td>Jeden dzień (YYYY-MM-DD) – skrót dla date_from = date_to</td></tr>
+          <tr><td>date_from</td><td>string</td><td>Zakres od (YYYY-MM-DD)</td></tr>
+          <tr><td>date_to</td><td>string</td><td>Zakres do (YYYY-MM-DD)</td></tr>
+          <tr><td>class_id</td><td>int</td><td>Filtruj po ID klasy</td></tr>
+          <tr><td>teacher_id</td><td>int</td><td>Filtruj po ID nauczyciela (nieobecny lub zastępca)</td></tr>
+          <tr><td>limit</td><td>int</td><td>Liczba wyników (0 = wszystkie)</td></tr>
+          <tr><td>offset</td><td>int</td><td>Pomiń pierwsze N wyników</td></tr>
+        </table>
+        <div class="code-block"><span class="label">Przykład – GET /api/substitutions?date=2026-03-02&amp;api_key=asiakatalizator</span><span class="key">{
+  "total": </span><span class="num">15</span><span class="key">,
+  "limit": </span><span class="num">15</span><span class="key">,
+  "offset": </span><span class="num">0</span><span class="key">,
+  "count": </span><span class="num">15</span><span class="key">,
+  "filters": { "date": </span><span class="str">"2026-03-02"</span><span class="key">, ... },
+  "data": [
+    {
+      "id": </span><span class="num">1</span><span class="key">,
+      "date": </span><span class="str">"2026-03-02"</span><span class="key">,
+      "lesson_number": </span><span class="num">1</span><span class="key">,
+      "subject": </span><span class="str">"Język niemiecki"</span><span class="key">,
+      "cause": </span><span class="str">"Erasmus-opieka"</span><span class="key">,
+      "note": </span><span class="str">"Uczniowie przychodzą później"</span><span class="key">,
+      "has_substitute": </span><span class="bool">false</span><span class="key">,
+      "original_teacher": { "id": </span><span class="num">1</span><span class="key">, "name": </span><span class="str">"Aleksiewicz-Drab Marta"</span><span class="key"> },
+      "substitute_teacher": </span><span class="null">null</span><span class="key">,
+      "class": { "id": </span><span class="num">1</span><span class="key">, "name": </span><span class="str">"3TB"</span><span class="key">, "full_name": </span><span class="str">"3 technik budownictwa"</span><span class="key"> },
+      "classroom": { "id": </span><span class="num">1</span><span class="key">, "name": </span><span class="str">"101"</span><span class="key"> }
+    }
+  ]
+}</span></div>
+      </div>
+    </div>
+
+    <div id="subs-today" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/substitutions/today</span>
+        <span class="endpoint-desc">Dzisiejsze zastępstwa</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Skrót – zwraca zastępstwa na dzisiaj, posortowane po numerze lekcji.</p>
+        <div class="code-block"><span class="label">Przykład odpowiedzi</span><span class="key">{
+  "date": </span><span class="str">"2026-03-09"</span><span class="key">,
+  "count": </span><span class="num">3</span><span class="key">,
+  "data": [...]
+}</span></div>
+      </div>
+    </div>
+
+    <div id="subs-upcoming" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/substitutions/upcoming</span>
+        <span class="endpoint-desc">Nadchodzące zastępstwa</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Zastępstwa na najbliższe N dni, pogrupowane po datach. Domyślnie 7 dni, maksymalnie 30.</p>
+        <table>
+          <tr><th>Parametr</th><th>Typ</th><th>Opis</th></tr>
+          <tr><td>days</td><td>int</td><td>Liczba dni do przodu (1–30, domyślnie 7)</td></tr>
+        </table>
+        <div class="code-block"><span class="label">Przykład odpowiedzi</span><span class="key">{
+  "from": </span><span class="str">"2026-03-09"</span><span class="key">,
+  "to": </span><span class="str">"2026-03-16"</span><span class="key">,
+  "days": </span><span class="num">7</span><span class="key">,
+  "total_count": </span><span class="num">20</span><span class="key">,
+  "by_date": [
+    {
+      "date": </span><span class="str">"2026-03-10"</span><span class="key">,
+      "count": </span><span class="num">8</span><span class="key">,
+      "substitutions": [...]
+    }
+  ]
+}</span></div>
+      </div>
+    </div>
+
+    <!-- === PLAN === -->
+    <div class="section-title">Plan lekcji</div>
+
+    <div id="plan-class" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/plan/class/<span class="param">{id}</span></span>
+        <span class="endpoint-desc">Plan tygodniowy klasy</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Pełny plan wszystkich dni tygodnia dla danej klasy. Lekcje pogrupowane po dniach.</p>
+        <div class="code-block"><span class="label">GET /api/plan/class/1</span><span class="key">{
+  "class": { "id": </span><span class="num">1</span><span class="key">, "name": </span><span class="str">"3TB"</span><span class="key">, "full_name": </span><span class="str">"3 technik budownictwa"</span><span class="key"> },
+  "total_lessons": </span><span class="num">35</span><span class="key">,
+  "week_plan": [
+    {
+      "day": </span><span class="num">1</span><span class="key">, "day_name": </span><span class="str">"Poniedziałek"</span><span class="key">,
+      "lessons": [
+        {
+          "lesson_number": </span><span class="num">1</span><span class="key">,
+          "subject": </span><span class="str">"Matematyka"</span><span class="key">,
+          "teacher": { "id": </span><span class="num">3</span><span class="key">, "name": </span><span class="str">"Kowalski Oskar"</span><span class="key"> },
+          "classroom": { "id": </span><span class="num">5</span><span class="key">, "name": </span><span class="str">"203"</span><span class="key"> }
+        }
+      ]
+    },
+    { "day": </span><span class="num">2</span><span class="key">, "day_name": </span><span class="str">"Wtorek"</span><span class="key">, "lessons": [...] },
+    ...
+  ]
+}</span></div>
+      </div>
+    </div>
+
+    <div id="plan-teacher" class="endpoint">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/plan/teacher/<span class="param">{id}</span></span>
+        <span class="endpoint-desc">Plan tygodniowy nauczyciela</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Pełny plan wszystkich dni tygodnia dla danego nauczyciela. Struktura analogiczna do planu klasy.</p>
+        <div class="code-block"><span class="label">GET /api/plan/teacher/3</span><span class="key">{
+  "teacher": { "id": </span><span class="num">3</span><span class="key">, "name": </span><span class="str">"Kowalski Oskar"</span><span class="key">, "short_name": </span><span class="str">"Kowalski O"</span><span class="key"> },
+  "total_lessons": </span><span class="num">18</span><span class="key">,
+  "week_plan": [
+    { "day": </span><span class="num">1</span><span class="key">, "day_name": </span><span class="str">"Poniedziałek"</span><span class="key">, "lessons": [...] },
+    ...
+  ]
+}</span></div>
+      </div>
+    </div>
+
+    <div class="footer">Zastępstwa API v1.0.0 &nbsp;·&nbsp; Klucz: <code style="background:#161b27;padding:1px 6px;border-radius:4px;color:#fbbf24;font-size:11px;">asiakatalizator</code></div>
+  </main>
+</div>
+
+<script>
+  function toggle(header) {
+    header.parentElement.classList.toggle('open');
+  }
+</script>
+</body>
+</html>

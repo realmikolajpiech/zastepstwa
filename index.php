@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/database.php';
 require_once __DIR__ . '/parser.php';
+require_once __DIR__ . '/api.php';
 
 initDatabase();
 
@@ -20,6 +21,11 @@ header('Access-Control-Allow-Headers: *');
 if ($method === 'OPTIONS') {
     http_response_code(204);
     exit;
+}
+
+// Deleguj wszystkie /api/... do API
+if (str_starts_with($requestUri, '/api')) {
+    handleApi($requestUri, $method);
 }
 
 function jsonResponse($data, int $code = 200): void {
@@ -47,8 +53,11 @@ function serveStaticFile(string $file): void {
 if ($requestUri === '/' || $requestUri === '/index.html') {
     serveStaticFile('index.html');
 }
-if (preg_match('/^\/(upload|substitutions|plan)\.html$/', $requestUri, $m)) {
+if (preg_match('/^\/(upload|substitutions|plan|api-docs)\.html$/', $requestUri, $m)) {
     serveStaticFile($m[0]);
+}
+if ($requestUri === '/api/docs') {
+    serveStaticFile('api-docs.html');
 }
 
 // POST /upload/
