@@ -46,7 +46,7 @@ body {
 <body class="min-h-screen pt-24 pb-12 px-4 sm:px-8" x-data="substitutionsApp()">
 
     <!-- Shared Header -->
-    <header class="fixed top-0 left-0 w-full px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-[#e2e5df] z-50 animate-reveal">
+    <!-- <header class="fixed top-0 left-0 w-full px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-[#e2e5df] z-50 animate-reveal">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-sm bg-[#90b918] flex items-center justify-center text-white font-bold text-lg">Z</div>
             <span class="font-semibold tracking-tight text-[#1c211e] hidden sm:block">System Zastępstw</span>
@@ -55,12 +55,12 @@ body {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Panel Główny
         </a>
-    </header>
+    </header> -->
 
     <main class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 animate-reveal delay-1">
+        <div class="flex flex-col md:flex-column md:items-center justify-center gap-6 mb-8 animate-reveal delay-1">
             <div>
-                <h1 class="text-3xl font-bold tracking-tight text-[#1c211e] mb-2"> Zastępstwa<span style="display: none;" x-text="date"></span></h1>
+                <h1 class="text-3xl font-bold tracking-tight text-[#1c211e] mb-2 text-center"> Zastępstwa<span style="display: none;" x-text="date"></span></h1>
             </div>
         </div>
 <!-- Data Grid -->
@@ -69,7 +69,7 @@ body {
                 <table class="w-full text-left border-collapse min-w-[800px]">
                     <thead>
                         <tr class="bg-[#f4f5f2] border-b border-[#e2e5df] sticky top-0 z-10">
-                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider w-16">Nr</th>
+                            <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider w-16">Lekcja</th>
                             <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider w-24">Godzina</th>
                             <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider">Nieobecny</th>
                             <th class="py-4 px-6 text-xs font-semibold text-[#5c6661] uppercase tracking-wider">Klasa</th>
@@ -88,11 +88,11 @@ body {
                         </template>
                         <template x-for="sub in substitutions" :key="sub.id">
                             <tr class="hover:bg-[#f9faf8] transition-colors">
-                                <td class="py-4 px-6 text-[#5c6661] font-medium" x-text="sub.lesson_number"></td>
+                                <td class="py-4 px-6 text-[#5c6661] font-medium text-center" x-text="sub.lesson_number"></td>
                                 <td class="py-4 px-6 text-[#5c6661] font-medium" x-text="sub.time ? sub.time.split('-')[0] : '-'"></td>
 <!-- Distinct UI label for absent teacher -->
-                                <td class="py-4 px-6">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-[#fdf3f3] text-[#b83a3a] text-sm font-semibold border border-[#fbd5d5]" x-text="sub.original_teacher ? sub.original_teacher.name : '-'"></span>
+                                <td class="py-2 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-[#fdf3f3] text-[#b83a3a] text-medium font-semibold border border-[#fbd5d5]" x-text="sub.original_teacher ? sub.original_teacher.name : '-'"></span>
                                 </td>
                                 <td class="py-4 px-6 font-bold text-[#1c211e]" x-text="sub.school_class.name"></td>
                                 <td class="py-4 px-6 text-[#1c211e]" x-text="sub.subject"></td>

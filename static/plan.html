@@ -126,7 +126,7 @@
                             @click="dropdownOpen = true"
                             class="w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer text-left flex items-center justify-between"
                         >
-                            <span x-text="selectedId ? (list.find(item => item.id == selectedId) ? (selectedType === 'class' ? list.find(item => item.id == selectedId).name.split(' ')[0] : selectedType === 'classroom' ? list.find(item => item.id == selectedId).name.split(' ')[0] : list.find(item => item.id == selectedId).name) : 'Wybierz z listy...') : (selectedType === 'class' ? 'Wybierz klasę...' : selectedType === 'teacher' ? 'Wybierz nauczyciela...' : 'Wybierz salę...')"></span>
+                            <span x-text="selectedId ? (list.find(item => item.id == selectedId) ? (selectedType === 'class' ? list.find(item => item.id == selectedId).name.split(' ')[0] : selectedType === 'classroom' ? list.find(item => item.id == selectedId).name.split(' ')[0] : cleanName(list.find(item => item.id == selectedId).name)) : 'Wybierz z listy...') : (selectedType === 'class' ? 'Wybierz klasę...' : selectedType === 'teacher' ? 'Wybierz nauczyciela...' : 'Wybierz salę...')"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform">
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
@@ -161,7 +161,7 @@
                                         :title="item.name"
                                     >
                                         <div class="flex items-center gap-2">
-                                            <span class="font-medium text-[#1c211e]" x-text="selectedType === 'class' ? item.name : selectedType === 'classroom' ? item.name.split(' ')[0] : item.name"></span>
+                                            <span class="font-medium text-[#1c211e]" x-text="selectedType === 'class' ? item.name : selectedType === 'classroom' ? item.name.split(' ')[0] : cleanName(item.name)"></span>
                                             <span class="text-sm text-[#5c6661]" x-text="selectedType === 'class' ? item.full_name : selectedType === 'classroom' ? item.name.split(' ').slice(1).join(' ') : (item.short_name || '')"></span>
                                         </div>
                                         <svg x-show="selectedId == item.id" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#90b918]">
@@ -244,29 +244,24 @@
                                         <!-- Wyświetlanie lekcji (obsługuje grupy na tej samej godzinie) -->
                                         <div x-show="weekPlan[ln] && weekPlan[ln][day]" class="flex flex-col gap-2 h-full">
                                             <template x-for="(lesson, index) in (weekPlan[ln] && weekPlan[ln][day] ? weekPlan[ln][day] : [])" :key="lesson.id || index">
-                                                <div class="lesson-card bg-white p-3 rounded-xl border border-[#e2e5df] h-full flex flex-col justify-between cursor-default">
-                                                    
-                                                    <div class="mb-2">
-                                                        <div class="font-bold text-[#1c211e] leading-tight mb-1" x-text="lesson.subject"></div>
-                                                        <div class="text-xs font-medium text-[#5c6661]">
-                                                            <span x-show="selectedType === 'class'" x-text="lesson.teacher ? lesson.teacher.name : ''"></span>
+                                                <div class="p-2 h-full flex flex-col gap-1 cursor-default">
+                                                    <div class="font-bold text-[#1c211e] leading-tight text-sm" x-text="lesson.subject"></div>
+                                                    <div class="flex items-start justify-between gap-1">
+                                                        <div class="text-xs font-medium text-[#5c6661] flex-1">
+                                                            <span x-show="selectedType === 'class'" x-text="lesson.teacher ? cleanName(lesson.teacher.name) : ''"></span>
                                                             <span x-show="selectedType === 'teacher'" x-text="lesson.school_class ? lesson.school_class.name : ''" class="inline-block bg-[#f4f5f2] px-1.5 py-0.5 rounded border border-[#e2e5df]"></span>
                                                             <template x-if="selectedType === 'classroom'">
                                                                 <span class="flex flex-col gap-0.5">
-                                                                    <span x-text="lesson.teacher ? lesson.teacher.name : ''"></span>
+                                                                    <span x-text="lesson.teacher ? cleanName(lesson.teacher.name) : ''"></span>
                                                                     <span x-text="lesson.school_class ? lesson.school_class.name : ''" class="inline-block bg-[#f4f5f2] px-1.5 py-0.5 rounded border border-[#e2e5df] w-fit"></span>
                                                                 </span>
                                                             </template>
                                                         </div>
-                                                    </div>
-                                                    
-                                                    <div class="flex justify-end mt-1" x-show="selectedType !== 'classroom'">
-                                                        <span class="inline-flex items-center gap-1 bg-[#f4f8e8] border border-[#d6e8a0] text-[#5e7a0f] px-2 py-0.5 rounded-md text-xs font-bold shadow-sm" title="Sala">
+                                                        <span x-show="selectedType !== 'classroom'" class="inline-flex items-center gap-1 bg-[#f4f8e8] border border-[#d6e8a0] text-[#5e7a0f] px-2 py-0.5 rounded-md text-xs font-bold shadow-sm shrink-0" title="Sala">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                                                            <span x-text="lesson.classroom ? lesson.classroom.name : '-'"></span>
+                                                            <span x-text="lesson.classroom ? lesson.classroom.name.split(' ')[0] : '-'"></span>
                                                         </span>
                                                     </div>
-
                                                 </div>
                                             </template>
                                         </div>
@@ -287,8 +282,9 @@
                 selectedId: '',
                 list: [],
                 weekPlan: {},
-                lessonNumbers: [], 
+                lessonNumbers: [],
                 loading: false,
+                cleanName(name) { return name ? name.replace(/\s*\([^)]*\)/g, '').trim() : ''; },
                 _reqId: null,
 
                 init() {
