@@ -208,8 +208,9 @@ function parsePlanHtmlFolderAndSave(array $htmlFiles): int {
     $lessons = loadJson('lessons');
 
     // Build name maps from lista.html
-    $classNameMap = [];   // "o36.html" => "4TMe 4technik mechatronik"
-    $teacherNameMap = []; // "n9.html"  => ["name" => "A.Skoczek (SK)", "short" => "SK"]
+    $classNameMap = [];        // "o36.html" => "4TMe 4technik mechatronik"
+    $teacherNameMap = [];      // "n9.html"  => ["name" => "A.Skoczek (SK)", "short" => "SK"]
+    $classroomFullNameMap = []; // "106" => "Pracownia języka niemieckiego"
 
     foreach ($htmlFiles as $filename => $content) {
         if (basename($filename) === 'lista.html') {
@@ -226,6 +227,11 @@ function parsePlanHtmlFolderAndSave(array $htmlFiles): int {
                         $short = $m[1];
                     }
                     $teacherNameMap[$base] = ['name' => $text, 'short' => $short];
+                } elseif (preg_match('/^s\d+\.html$/i', $base)) {
+                    $parts = explode(' ', $text, 2);
+                    if (count($parts) === 2) {
+                        $classroomFullNameMap[$parts[0]] = $parts[1];
+                    }
                 }
             }
             break;
@@ -360,7 +366,8 @@ function parsePlanHtmlFolderAndSave(array $htmlFiles): int {
 
                         $classroomId = null;
                         if ($classroomName !== '' && $classroomName !== '-') {
-                            [$classroomId] = getOrCreateClassroom($classroomName);
+                            $classroomFullName = $classroomFullNameMap[$classroomName] ?? null;
+                            [$classroomId] = getOrCreateClassroom($classroomName, $classroomFullName);
                         }
 
                         $lessons[] = [

@@ -62,13 +62,19 @@ function getOrCreateClass(string $name): array {
     return [$id, $classes];
 }
 
-function getOrCreateClassroom(string $name): array {
+function getOrCreateClassroom(string $name, ?string $fullName = null): array {
     $classrooms = loadJson('classrooms');
-    foreach ($classrooms as $cr) {
-        if ($cr['name'] === $name) return [$cr['id'], $classrooms];
+    foreach ($classrooms as &$cr) {
+        if ($cr['name'] === $name) {
+            if ($fullName && empty($cr['full_name'])) {
+                $cr['full_name'] = $fullName;
+                saveJson('classrooms', $classrooms);
+            }
+            return [$cr['id'], $classrooms];
+        }
     }
     $id = nextId($classrooms);
-    $classroom = ['id' => $id, 'name' => $name];
+    $classroom = ['id' => $id, 'name' => $name, 'full_name' => $fullName ?? ''];
     $classrooms[] = $classroom;
     saveJson('classrooms', $classrooms);
     return [$id, $classrooms];

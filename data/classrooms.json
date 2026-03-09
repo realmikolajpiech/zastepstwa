@@ -1,258 +1,322 @@
 [
     {
         "id": 1,
-        "name": "106"
+        "name": "106",
+        "full_name": "Pracownia języka niemieckiego"
     },
     {
         "id": 2,
-        "name": "08"
+        "name": "08",
+        "full_name": "Pracownia Historyczna\/WOS"
     },
     {
         "id": 3,
-        "name": "Sg4"
+        "name": "Sg4",
+        "full_name": "Sala gimnastyczna"
     },
     {
         "id": 4,
-        "name": "W2"
+        "name": "W2",
+        "full_name": "Pracownia budownictwa ogólnego"
     },
     {
         "id": 5,
-        "name": "W18"
+        "name": "W18",
+        "full_name": "Pracownia mechaniki ogólnej"
     },
     {
         "id": 6,
-        "name": "104a"
+        "name": "104a",
+        "full_name": "Pracownia komputerowa"
     },
     {
         "id": 7,
-        "name": "W9"
+        "name": "W9",
+        "full_name": "Pracownia budowlana"
     },
     {
         "id": 8,
-        "name": "W12"
+        "name": "W12",
+        "full_name": "Pracownia komputerowa"
     },
     {
         "id": 9,
-        "name": "W13"
+        "name": "W13",
+        "full_name": "Pracownia mechatroniczna"
     },
     {
         "id": 10,
-        "name": "102"
+        "name": "102",
+        "full_name": "Pracownia komputerowa"
     },
     {
         "id": 11,
-        "name": "104b"
+        "name": "104b",
+        "full_name": "Pracownia komputerowa (MChe)"
     },
     {
         "id": 12,
-        "name": "206"
+        "name": "206",
+        "full_name": "Pracownia j.polskiego"
     },
     {
         "id": 13,
-        "name": "W14"
+        "name": "W14",
+        "full_name": "Pracownia mechatroniczna"
     },
     {
         "id": 14,
-        "name": "210"
+        "name": "210",
+        "full_name": "Pracownia j.polskiego"
     },
     {
         "id": 15,
-        "name": "W15"
+        "name": "W15",
+        "full_name": "Pracownia mechatroniczna"
     },
     {
         "id": 16,
-        "name": "203"
+        "name": "203",
+        "full_name": "Pracownia biologiczna"
     },
     {
         "id": 17,
-        "name": "108"
+        "name": "108",
+        "full_name": "Pracownia matematyczna"
     },
     {
         "id": 18,
-        "name": "04"
+        "name": "04",
+        "full_name": "Pracownia chemiczna"
     },
     {
         "id": 19,
-        "name": "208"
+        "name": "208",
+        "full_name": "Pracownia j.polskiego"
     },
     {
         "id": 20,
-        "name": "W11"
+        "name": "W11",
+        "full_name": "Pracownia obsługi klienta"
     },
     {
         "id": 21,
-        "name": "209"
+        "name": "209",
+        "full_name": "Pracownia jezyka angielskiego(audio)"
     },
     {
         "id": 22,
-        "name": "02"
+        "name": "02",
+        "full_name": "Pracownia fizyczna"
     },
     {
         "id": 23,
-        "name": "202"
+        "name": "202",
+        "full_name": "Pracownia geograficzna"
     },
     {
         "id": 24,
-        "name": "07"
+        "name": "07",
+        "full_name": "Pracownia historyczna"
     },
     {
         "id": 25,
-        "name": "Sg1"
+        "name": "Sg1",
+        "full_name": "Sala gimnastyczna"
     },
     {
         "id": 26,
-        "name": "204"
+        "name": "204",
+        "full_name": "Pracownia jezyka angielskiego(audio)"
     },
     {
         "id": 27,
-        "name": "01"
+        "name": "01",
+        "full_name": "Pracownia języka angielskiego"
     },
     {
         "id": 28,
-        "name": "201"
+        "name": "201",
+        "full_name": "Pracownia przedsiębiorczości"
     },
     {
         "id": 29,
-        "name": "W3"
+        "name": "W3",
+        "full_name": "Pracownia budownictwa ogólnego"
     },
     {
         "id": 30,
-        "name": "207"
+        "name": "207",
+        "full_name": "Pracownia j.polskiego"
     },
     {
         "id": 31,
-        "name": "06"
+        "name": "06",
+        "full_name": "Pracownia religii"
     },
     {
         "id": 32,
-        "name": "105"
+        "name": "105",
+        "full_name": "Pracownia języka angielskiego"
     },
     {
         "id": 33,
-        "name": "205"
+        "name": "205",
+        "full_name": "Pracownia języka angielskiego"
     },
     {
         "id": 34,
-        "name": "W25"
+        "name": "W25",
+        "full_name": "Pracownia usług fryzjerskich"
     },
     {
         "id": 35,
-        "name": "W3a"
+        "name": "W3a",
+        "full_name": "Pracownia CNC\/językowa"
     },
     {
         "id": 36,
-        "name": "W10a"
+        "name": "W10a",
+        "full_name": "Pracownia gastronomiczna- technologiczna"
     },
     {
         "id": 37,
-        "name": "107"
+        "name": "107",
+        "full_name": "Pracownia matematyczna"
     },
     {
         "id": 38,
-        "name": "03"
+        "name": "03",
+        "full_name": "Pracownia matematyczno-fizyczna"
     },
     {
         "id": 39,
-        "name": "W22"
+        "name": "W22",
+        "full_name": "Pracownia hotelarska 1"
     },
     {
         "id": 40,
-        "name": "103"
+        "name": "103",
+        "full_name": "Pracownia komputerowa"
     },
     {
         "id": 41,
-        "name": "109"
+        "name": "109",
+        "full_name": "Pracownia matematyczna"
     },
     {
         "id": 42,
-        "name": "Sg3"
+        "name": "Sg3",
+        "full_name": "Sala gimnastyczna"
     },
     {
         "id": 43,
-        "name": "Sg6"
+        "name": "Sg6",
+        "full_name": "Sala gimnastyczna"
     },
     {
         "id": 44,
-        "name": "W4a"
+        "name": "W4a",
+        "full_name": "Pracownia podstaw technologii mechanicznych"
     },
     {
         "id": 45,
-        "name": "101"
+        "name": "101",
+        "full_name": "Pracownia komputerowa"
     },
     {
         "id": 46,
-        "name": "W17"
+        "name": "W17",
+        "full_name": "Pracownia elektryczna"
     },
     {
         "id": 47,
-        "name": "W20"
+        "name": "W20",
+        "full_name": "Pracownia elektryczna"
     },
     {
         "id": 48,
-        "name": "Sg2"
+        "name": "Sg2",
+        "full_name": "Sala gimnastyczna"
     },
     {
         "id": 49,
-        "name": "W4"
+        "name": "W4",
+        "full_name": "Pracownia ślusarsko-spawalnicza"
     },
     {
         "id": 50,
-        "name": "W8"
+        "name": "W8",
+        "full_name": "Pracownia mechaniczna (tokarki)"
     },
     {
         "id": 51,
-        "name": "05"
+        "name": "05",
+        "full_name": "Pracownia Języka polskiego"
     },
     {
         "id": 52,
-        "name": "W23"
+        "name": "W23",
+        "full_name": "Pracownia hotelarska 2"
     },
     {
         "id": 53,
-        "name": "W21"
+        "name": "W21",
+        "full_name": "Pracownia elektryczna"
     },
     {
         "id": 54,
-        "name": "Sg5"
+        "name": "Sg5",
+        "full_name": "Sala gimnastyczna"
     },
     {
         "id": 55,
-        "name": "W5"
+        "name": "W5",
+        "full_name": "Pracownia budowlana"
     },
     {
         "id": 56,
-        "name": "W6"
+        "name": "W6",
+        "full_name": "Pracownia ACAD"
     },
     {
         "id": 57,
-        "name": "W8a"
+        "name": "W8a",
+        "full_name": "Pracownia mechaniczna druga"
     },
     {
         "id": 58,
-        "name": "W16"
+        "name": "W16",
+        "full_name": "Pracownia diagnostyki sam."
     },
     {
         "id": 59,
-        "name": "W1"
+        "name": "W1",
+        "full_name": "Pracownia budowlana"
     },
     {
         "id": 60,
-        "name": "W7"
+        "name": "W7",
+        "full_name": "Stolarnia"
     },
     {
         "id": 61,
-        "name": "W10"
+        "name": "W10",
+        "full_name": "Pracownia gastronomiczna- kuchnia"
     },
     {
         "id": 62,
-        "name": "W19"
+        "name": "W19",
+        "full_name": "Pracownia elektryczna- mała"
     },
     {
         "id": 63,
-        "name": "WŚw"
+        "name": "WŚw",
+        "full_name": "Świetlica warsztaty"
     },
     {
         "id": 64,
-        "name": "W24"
+        "name": "W24",
+        "full_name": "Pracownia gastronomiczna (mała)"
     }
 ]

@@ -118,7 +118,10 @@ body {
                 substitutions: [],
                 hours: [],
                 loading: false,
-                init() { this.fetchHours(); this.fetchData(); },
+                async init() { 
+                    await this.fetchHours(); 
+                    this.fetchData(); 
+                },
                 async fetchHours() {
                     try {
                         const response = await fetch('hours.json');
@@ -127,7 +130,10 @@ body {
                     } catch (e) { console.error(e); }
                 },
                 getTime(lessonNumber) {
+                    console.log('Szukam:', lessonNumber, 'Typ:', typeof lessonNumber);
+                    console.log('Dostępne godziny:', this.hours);
                     const hour = this.hours.find(h => h.nr === Number(lessonNumber));
+                    console.log('Znaleziona godzina:', hour);
                     return hour ? `${hour.start}-${hour.end}` : '-';
                 },
                 async fetchData() {
