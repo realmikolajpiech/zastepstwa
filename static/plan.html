@@ -110,16 +110,37 @@
         <div class="bg-white p-4 sm:p-6 rounded-2xl border border-[#e2e5df] shadow-sm mb-8 flex flex-col md:flex-row gap-4 animate-reveal delay-1 max-w-3xl relative z-40 overflow-visible">
             <div class="flex-1">
                 <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2">Tryb widoku</label>
-                <select x-model="selectedType" class="custom-select w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer">
-                    <option value="class">Oddział (Klasa)</option>
-                    <option value="teacher">Nauczyciel</option>
-                    <option value="classroom">Sala</option>
-                </select>
+                <div class="relative" x-data="{ typeOpen: false }" @click.away="typeOpen = false">
+                    <button
+                        @click="typeOpen = !typeOpen"
+                        class="w-full bg-[#f4f5f2] border border-[#e2e5df] rounded-xl px-4 py-3 text-[#1c211e] focus:outline-none focus:border-[#90b918] focus:ring-1 focus:ring-[#90b918] transition-all cursor-pointer text-left flex items-center justify-between"
+                        :class="{ 'border-[#90b918] ring-1 ring-[#90b918]': typeOpen }"
+                    >
+                        <span x-text="selectedType === 'class' ? 'Oddział (Klasa)' : selectedType === 'teacher' ? 'Nauczyciel' : 'Sala'"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="typeOpen ? 'rotate-180' : ''" class="transition-transform">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div x-show="typeOpen" class="absolute top-full left-0 right-0 mt-2 bg-white border border-[#e2e5df] rounded-xl shadow-2xl z-[9999] overflow-hidden">
+                        <template x-for="opt in [{value: 'class', label: 'Oddział (Klasa)'}, {value: 'teacher', label: 'Nauczyciel'}, {value: 'classroom', label: 'Sala'}]" :key="opt.value">
+                            <button
+                                @click="selectedType = opt.value; typeOpen = false; $dispatch('open-picker')"
+                                class="w-full text-left px-4 py-3 hover:bg-[#f4f5f2] transition-colors border-b border-[#e2e5df] last:border-b-0 flex items-center justify-between"
+                                :class="{ 'bg-[#f4f8e8]': selectedType === opt.value }"
+                            >
+                                <span class="font-medium text-[#1c211e]" x-text="opt.label"></span>
+                                <svg x-show="selectedType === opt.value" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#90b918]">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </button>
+                        </template>
+                    </div>
+                </div>
             </div>
 
             <div class="flex-[2] relative z-50">
                 <label class="block text-xs font-semibold text-[#5c6661] uppercase tracking-wider mb-2" x-text="selectedType === 'class' ? 'Wybierz Klasę' : selectedType === 'teacher' ? 'Wybierz Nauczyciela' : 'Wybierz Salę'"></label>
-                <div class="relative z-50" x-data="{ dropdownOpen: false, searchTerm: '' }" @click.away="dropdownOpen = false" x-init="$watch('dropdownOpen', (open) => { if (open) { setTimeout(() => { $el.querySelector('input')?.focus(); }, 0); } })">
+                <div class="relative z-50" x-data="{ dropdownOpen: false, searchTerm: '' }" @click.away="dropdownOpen = false" @open-picker.window="dropdownOpen = true" x-init="$watch('dropdownOpen', (open) => { if (open) { setTimeout(() => { $el.querySelector('input')?.focus(); }, 0); } })">
                     <!-- Closed State - Button -->
                     <template x-if="!dropdownOpen">
                         <button 

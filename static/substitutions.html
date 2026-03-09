@@ -43,7 +43,7 @@ body {
         }
 </style>
 </head>
-<body class="min-h-screen pt-24 pb-12 px-4 sm:px-8" x-data="substitutionsApp()">
+<body class="min-h-screen pt-6 pb-0 px-0 sm:px-8" x-data="substitutionsApp()">
 
     <!-- Shared Header -->
     <!-- <header class="fixed top-0 left-0 w-full px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-[#e2e5df] z-50 animate-reveal">
@@ -57,10 +57,10 @@ body {
         </a>
     </header> -->
 
-    <main class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-column md:items-center justify-center gap-6 mb-8 animate-reveal delay-1">
+    <main class="w-full mx-auto px-0 sm:px-8">
+        <div class="flex flex-col md:flex-column md:items-center justify-center gap-6 mb-4 animate-reveal delay-1">
             <div>
-                <h1 class="text-3xl font-bold tracking-tight text-[#1c211e] mb-2 text-center"> Zastępstwa<span style="display: none;" x-text="date"></span></h1>
+                <h1 class="text-4xl font-bold tracking-tight text-[#1c211e] mb-2 text-center"> Zastępstwa<span style="display: none;" x-text="date"></span></h1>
             </div>
         </div>
 <!-- Data Grid -->
@@ -89,7 +89,7 @@ body {
                         <template x-for="sub in substitutions" :key="sub.id">
                             <tr class="hover:bg-[#f9faf8] transition-colors">
                                 <td class="py-4 px-6 text-[#5c6661] font-medium text-center" x-text="sub.lesson_number"></td>
-                                <td class="py-4 px-6 text-[#5c6661] font-medium" x-text="sub.time ? sub.time.split('-')[0] : '-'"></td>
+                                <td class="py-4 px-6 text-[#5c6661] font-medium" x-text="getTime(sub.lesson_number)"></td>
 <!-- Distinct UI label for absent teacher -->
                                 <td class="py-2 px-6">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-[#fdf3f3] text-[#b83a3a] text-medium font-semibold border border-[#fbd5d5]" x-text="sub.original_teacher ? sub.original_teacher.name : '-'"></span>
@@ -116,8 +116,20 @@ body {
             return {
                 date: new Date().toISOString().split('T')[0],
                 substitutions: [],
+                hours: [],
                 loading: false,
-                init() { this.fetchData(); },
+                init() { this.fetchHours(); this.fetchData(); },
+                async fetchHours() {
+                    try {
+                        const response = await fetch('hours.json');
+                        if (response.ok) { this.hours = await response.json(); } 
+                        else { console.error("Failed to fetch hours"); }
+                    } catch (e) { console.error(e); }
+                },
+                getTime(lessonNumber) {
+                    const hour = this.hours.find(h => h.nr === lessonNumber);
+                    return hour ? `${hour.start}-${hour.end}` : '-';
+                },
                 async fetchData() {
                     this.loading = true;
                     try {
